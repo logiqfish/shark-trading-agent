@@ -240,9 +240,11 @@ Equity ${X.XX} | Day {±}${X.XX} | Positions {N}
 (Bear)`. `{stop status}` = `stops OK` when every position has a stop with buffer ≥ 3%, else
 a short flag (`ZETA buffer 2.9% ⚠️`, `1 missing stop`); zero positions → `Positions 0`.
 
-**Quiet on no-action fires:** if the fire took **no action** (closed market, no trade, no
-management change), **prefix the summary with `[SILENT]`** so the cron delivery stays quiet
-and doesn't spam the channel on every idle fire.
+**Always post a one-line card — every fire.** Emit the status card on *every* fire (trade,
+no-trade, or market-closed) so a correctly-running bot never looks dead ("did it even
+fire?"). Do **not** prefix no-action fires with `[SILENT]` — that suppressed cron delivery
+and made healthy bots look broken. A quiet day is a valid, visible outcome
+(`no trade — {short reason}`), not a silent one.
 
 ---
 

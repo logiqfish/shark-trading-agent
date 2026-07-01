@@ -278,7 +278,10 @@ That's the whole install — Phase 6 drives the first run and turns on the sched
 ~3×/day cadence.
 
 1. **Find the job.** The kit ships a `weekday-trading` cron job (**CRON** page), disabled
-   by default: `0 10,13,15 * * 1-5` America/New_York, `--skill shark`.
+   by default: `0 10,13,15 * * 1-5` America/New_York, `--skill shark`. _(It's on the
+   **CRON** page, not the **Blueprints** tab. If your build doesn't list it there, use the
+   non-technical fallback: ask the bot in plain English to register it — "set up the
+   weekday-trading cron" — per [docs/FRIEND-SETUP.md](docs/FRIEND-SETUP.md).)_
 2. **Run it once by hand.** Hit the ⚡ **run-now** on the job card (or CLI
    `hermes cron run <id>`). Watch **LOGS** — you should see
    `cron.scheduler: Job '<id>': ... completed successfully`. The full report is saved as a

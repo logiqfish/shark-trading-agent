@@ -12,7 +12,9 @@ actually trades** — with discipline:
 It runs on exactly two keys and nothing else:
 
 1. **Alpaca (paper)** — market data *and* execution.
-2. **An LLM** — the single trading brain (DeepSeek recommended).
+2. **An LLM** — the single trading brain. Use **[OpenRouter](https://openrouter.ai/)** for
+   this key and you can **swap brains** (DeepSeek, Claude, GPT, Gemini…) from one account by
+   changing a single setting — no re-install. DeepSeek is a good, cheap default to start.
 
 There is no hosted service, no mesh, no secrets of anyone else's — it all runs on your box,
 on your paper account, at your risk. Read **[DISCLAIMER.md](DISCLAIMER.md)** before you
@@ -48,6 +50,28 @@ evidence layers — runs as a separate hosted service and is **not** part of thi
 design. If you want access to that, reach out at **[logiqfish.com](https://logiqfish.com)**.
 
 **Paper trading only. There is no live-trading path in this kit, by design.**
+
+---
+
+## Background: what you're standing up (Hermes + a VPS)
+
+New here? Three pieces of jargon, explained once:
+
+- **Hermes** is an open-source, self-hosted **AI-agent runtime** by Nous Research. It gives
+  the bot a persistent home — memory, skills, a scheduler, and chat channels like Telegram —
+  plus a **browser dashboard**, so you never need SSH. This kit ships *as* a Hermes profile
+  you install in one line. Docs:
+  **[hermes-agent.nousresearch.com](https://hermes-agent.nousresearch.com/docs/)** ·
+  source: **[github.com/nousresearch/hermes-agent](https://github.com/nousresearch/hermes-agent)**.
+- **A VPS** (Virtual Private Server) is a small, always-on Linux machine you rent in the
+  cloud. **Why you need one:** the agent trades on a schedule (~3×/day on market days) and
+  has to keep running when your laptop is closed — the VPS is that always-on box. We use
+  **[Hostinger](https://www.hostinger.com/vps-hosting)** in the walkthrough because it has a
+  **one-click *Hermes Agent* app** (Hermes comes pre-installed), but any provider works —
+  see [SETUP.md](SETUP.md).
+- **The LLM brain** is the only "smarts" you plug in. Point it at
+  **[OpenRouter](https://openrouter.ai/)** and you can switch brains (DeepSeek, Claude, GPT,
+  Gemini…) from one key without re-installing.
 
 ---
 

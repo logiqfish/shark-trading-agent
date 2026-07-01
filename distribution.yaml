@@ -1,8 +1,10 @@
 # Hermes Agent Profile Distribution — Shark Trading Agent
 # Install (in the Hermes App terminal, in your browser):
 #   hermes profile install github.com/logiqfish/shark-trading-agent
-# The installer reads env_requires below and writes a .env.EXAMPLE listing exactly
-# the two Alpaca keys for you to fill (in the FILES page — no terminal needed).
+# The installer reads env_requires below and generates the profile .env listing the
+# two required Alpaca values (plus an optional paper-endpoint default). The FILES page
+# is download-only, so add the keys from the in-browser App terminal:
+#   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
 # Your LLM key is set once in the dashboard KEYS page, not here.
 name: shark-trading-agent
 version: 1.0.0
