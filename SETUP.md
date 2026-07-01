@@ -128,6 +128,19 @@ is already done — it's "Running" on the Overview. Three ways in:)_
 
 ## Phase 3 — Configure the LLM (use any provider you like)
 
+> **⚠️ ORDER MATTERS — install the Shark profile (Phase 5) FIRST, then do this phase and
+> Phase 4 against the *active* profile.** Keys, model, and Telegram all bind to whichever
+> profile is **active**; set them before `hermes profile use shark-trading-agent` and they
+> attach to Hermes' **default** profile instead — the #1 setup failure. Concretely:
+> - **Put the LLM key in the profile `.env` via the App terminal**, *not* the KEYS page:
+>   `printf 'OPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env`.
+>   The KEYS/MODELS GUI can write it to the **global** `/opt/data/.env`, which the profile
+>   does **not** read → the bot reports *"No LLM provider configured"* even though the model
+>   is selected. (You can still use MODELS to *pick* the model — that part is per-profile.)
+> - Then set Alpaca keys (Phase 5) and Telegram (Phase 4) the same way, and do **one**
+>   restart after everything. The KEYS-page steps below still work for providers whose keys
+>   land in the profile env, but the terminal method is the reliable path.
+
 **Goal:** give Hermes a single brain. **Any LLM works** — the KEYS page supports ~28
 providers (Anthropic/Claude, DeepSeek, Gemini, Kimi/Moonshot, OpenAI, OpenRouter, and
 more). The kit **hardcodes no model**, so pick whichever you have a key for and can

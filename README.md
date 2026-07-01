@@ -81,8 +81,11 @@ New here? Three pieces of jargon, explained once:
 
 ## Install (everything in your browser — no terminal of your own)
 
-You stand up Hermes once, then install Shark with a single line in the **in-browser App
-terminal**.
+You stand up Hermes once, then **install the Shark profile first and configure everything
+against it** — all from the **in-browser App terminal** (no SSH). **Order matters:** any
+key, model, or Telegram channel you set *before* the Shark profile is active binds to
+Hermes' **default** profile instead — which is the #1 setup failure (LLM key → the global
+env the profile ignores → *"No LLM provider configured"*; Telegram → the wrong bot).
 
 > **Fastest working path → [docs/FRIEND-SETUP.md](docs/FRIEND-SETUP.md).** That guide
 > reflects the currently validated Hostinger / Hermes v0.17.0 setup, including two rough
@@ -90,50 +93,52 @@ terminal**.
 > "Restart Gateway" button can hang). Full step-by-step provisioning walkthrough:
 > **[SETUP.md](SETUP.md)**.
 
-1. **Stand up Hermes v0.17.0** on a small VPS and configure your **LLM brain** (KEYS →
-   your provider key; MODELS → pick the model — DeepSeek recommended). Optionally connect
-   **Telegram** (CHANNELS → QR) so you can chat with it and get trade cards. *(SETUP.md
-   Phases 1–4.)*
+1. **Stand up Hermes v0.17.0** on a small VPS and get to the **dashboard + App terminal**.
+   **Don't set any keys or the model yet** — that comes *after* the Shark profile is active
+   (step 2), or it lands on Hermes' default profile. *(SETUP.md Phases 1–2.)*
 
-2. **Install the Shark distribution.** Open the Hermes app's **App terminal** (a shell in
-   your browser — no SSH) and paste:
+2. **Install AND activate the Shark profile — do this FIRST.** Open the Hermes app's **App
+   terminal** (a browser shell — no SSH) and paste:
    ```
    hermes profile install github.com/logiqfish/shark-trading-agent -y
    hermes profile use shark-trading-agent
    ```
-   It pulls the SOUL, the `shark` skill, and the cron, and generates the profile **`.env`**
-   (from the manifest's `env_requires`) declaring exactly the two Alpaca keys.
+   Dashboard → **PROFILES** should now show `shark-trading-agent [active]`. It pulls the
+   SOUL, the `shark` skill, and the cron, and generates the profile **`.env`**. **⚠️
+   Everything below binds to the *active* profile — so it must come after this line.**
 
-3. **Set your two Alpaca paper keys — in the App terminal.** The FILES page is
-   **download-only**, so add the keys from the App terminal (this *appends* — it won't
-   wipe anything else in the file):
+3. **Set all three keys in the profile `.env` — in the App terminal.** The FILES page is
+   **download-only**, so append them in the terminal (this *appends*, won't wipe anything).
+   Alpaca **paper** keys from app.alpaca.markets (Paper account); the LLM key from
+   openrouter.ai (it starts `sk-or-`):
    ```
-   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nOPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
    ```
-   Get the keys from app.alpaca.markets → switch to the **Paper** account → generate keys.
-   Your **LLM key is already set in KEYS** (step 1) — it does **not** go in this `.env`.
-   _(Known issue: on some builds the KEYS/MODELS page writes the LLM key to the global env
-   the profile doesn't read, so the brain reports "Provider authentication failed." If that
-   happens, add the LLM key to the **profile** `.env` from the App terminal too — see
-   [docs/SETUP-runbook.md](docs/SETUP-runbook.md).)_
+   Then pick the model: **MODELS → `deepseek/deepseek-v4-pro`** (or any OpenRouter model).
+   _Putting the LLM key in the profile `.env` here is deliberate: the GUI **KEYS** page can
+   write it to the **global** env the profile doesn't read — the #1 cause of "No LLM
+   provider configured" even though the model is selected._
 
-4. **Restart to load the keys.** The `.env` is read on restart (it isn't hot-reloaded).
-   The dashboard's "Restart Gateway" button can hang in some containers — if it does,
-   restart from the **Hostinger panel → Docker Manager** (restart the Hermes app, or
-   Reboot VPS) instead.
+4. **(Optional) Telegram — for THIS profile.** In **CHANNELS**, connect Telegram (QR or bot
+   token) and **enable it for the active `shark-trading-agent` profile** — not the default
+   Hermes bot. Skip this if you only want headless cron.
 
-5. **Smoke-test it by hand.** In **CHAT** (or Telegram): *"Run the shark skill now for a
+5. **Restart to load everything.** The `.env` isn't hot-reloaded, so restart once now —
+   dashboard **Restart Gateway**, or if it hangs, **Hostinger panel → Docker Manager**
+   (restart the Hermes app, or Reboot VPS). One restart picks up all keys + the channel.
+
+6. **Smoke-test it by hand.** In **CHAT** (or Telegram): *"Run the shark skill now for a
    single fire."* During market hours you'll see it read the regime, surface a candidate,
    run the debate, and — if it trades — place a broker-protected paper entry and a journal
    slip. Confirm the order in your Alpaca paper account.
 
-6. **Enable the schedule.** The cron installs **disabled** on purpose. Turn it on in the
+7. **Enable the schedule.** The cron installs **disabled** on purpose. Turn it on in the
    **CRON** page (job `weekday-trading`, 10:00 / 13:00 / 15:00 ET, Mon–Fri). _If it isn't
    listed on the CRON page in your build, ask the bot in plain English to register it —
    "set up the weekday-trading cron"._ If you wired Telegram, send **`/sethome`** in the
    chat where you want the trade cards delivered.
 
-7. **(Optional) Gut trades — the bot as your "second brain."** Separate from the scheduled
+8. **(Optional) Gut trades — the bot as your "second brain."** Separate from the scheduled
    scan, you can hand it a stock *you* picked and have it pressure-test your gut before any
    money moves. DM a plain directive with a **real symbol** (`TICKER` above is just a
    placeholder — use `NVDA`, `AAPL`, etc.). A sample exchange:

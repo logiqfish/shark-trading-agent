@@ -24,10 +24,19 @@ terminal", or dashboard) and run **one line**:
 hermes profile install github.com/logiqfish/shark-trading-agent -y
 hermes profile use shark-trading-agent
 ```
-Dashboard → **PROFILES** should now show `shark-trading-agent [active]`.
+Dashboard → **PROFILES** should now show `shark-trading-agent [active]`. **Do this first**
+— every key, model, and Telegram channel you set below binds to whichever profile is
+**active**, so if you configure them before this the bot uses Hermes' default profile
+instead (LLM key in the wrong env, Telegram on the wrong bot).
 
-**2. LLM key** — dashboard → **KEYS** page → add your **OpenRouter** key. (It writes to
-the active profile's `.env`.)
+**2. LLM key** — add your **OpenRouter** key (starts `sk-or-`) to the profile `.env` in the
+**App terminal** — *not* the KEYS page:
+```
+printf 'OPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+```
+⚠️ The dashboard **KEYS** page can write the key to the **global** `/opt/data/.env`, which
+the profile does **not** read — so the bot says *"No LLM provider configured"* even though
+you set it and can pick the model. The profile `.env` is the location that actually works.
 
 **3. Model** — dashboard → **PROFILES** → the profile's **⋮** menu → **CHANGE MODEL** (or
 the **MODELS** page) → pick **`openrouter / deepseek/deepseek-v4-pro`** (or any OpenRouter
