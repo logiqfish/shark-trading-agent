@@ -236,7 +236,7 @@ skills, cron job, and config as one installable agent. Installing it is a single
 1. **Install the profile.** In the dashboard's **App terminal** (or over SSH into the
    container), run:
    ```
-   hermes profile install github.com/logiqfish/shark-starter-kit -y
+   hermes profile install github.com/logiqfish/shark-trading-agent -y
    ```
    This pulls the `shark` skill (all trading scripts), `SOUL.md` (persona), `AGENTS.md`
    (rules), and the disabled `weekday-trading` cron job onto the box.

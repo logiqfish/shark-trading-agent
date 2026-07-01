@@ -20,12 +20,12 @@ paper account, and the `weekday-trading` cron fires the shark routine headless
 
 1. **Install the profile** (one CLI line in the **App terminal**):
    ```
-   hermes profile install <source>     # github.com/logiqfish/shark-starter-kit once pushed
+   hermes profile install <source>     # github.com/logiqfish/shark-trading-agent once pushed
    ```
-   Confirm it's active: dashboard → **PROFILES** shows `shark-starter-kit@x.y.z [active]`.
+   Confirm it's active: dashboard → **PROFILES** shows `shark-trading-agent@x.y.z [active]`.
 
 2. **Put ALL keys in the _profile_ `.env`** — this is the load-bearing step:
-   `/opt/data/profiles/shark-starter-kit/.env`
+   `/opt/data/profiles/shark-trading-agent/.env`
    ```
    ALPACA_API_KEY=...
    ALPACA_SECRET_KEY=...

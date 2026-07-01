@@ -21,10 +21,10 @@ Do **all** of steps 1–6 before the single restart, so one restart loads everyt
 **1. Install the profile** — open the **App terminal** (Hostinger app card → "App
 terminal", or dashboard) and run **one line**:
 ```
-hermes profile install github.com/logiqfish/shark-starter-kit -y
-hermes profile use shark-starter-kit
+hermes profile install github.com/logiqfish/shark-trading-agent -y
+hermes profile use shark-trading-agent
 ```
-Dashboard → **PROFILES** should now show `shark-starter-kit [active]`.
+Dashboard → **PROFILES** should now show `shark-trading-agent [active]`.
 
 **2. LLM key** — dashboard → **KEYS** page → add your **OpenRouter** key. (It writes to
 the active profile's `.env`.)
@@ -36,7 +36,7 @@ model). Without this the bot has no brain.
 **4. Alpaca keys** — the KEYS page **won't** take these (it only does LLM/OAuth keys), so
 add them in the **App terminal** (this *appends*, it won't wipe your OpenRouter key):
 ```
-printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-starter-kit/.env
+printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
 ```
 
 **5. Telegram for THIS profile** — dashboard → **CHANNELS** → **Telegram** row →
@@ -66,7 +66,7 @@ positions) means you're done. The scan then fires on schedule and pushes cards h
 ## The traps (read these)
 
 **Trap #1 — Channels are per-profile.** When the box first boots, the *default* Hermes bot
-answers Telegram. Your **shark-starter-kit** profile has its **own** Telegram that starts
+answers Telegram. Your **shark-trading-agent** profile has its **own** Telegram that starts
 **Disabled** (CHANNELS page). So after install the bot can go silent — you must enable
 Telegram *for this profile* (step 5). The first bot working is a red herring.
 
@@ -85,7 +85,7 @@ cron") — it has a cron tool and will do it.
   authentication failed."* That's expected, not broken.
 - The **FILES** page is **download-only** — you can't edit `.env` there; use the App
   terminal.
-- Keys live in `/opt/data/profiles/shark-starter-kit/.env`.
+- Keys live in `/opt/data/profiles/shark-trading-agent/.env`.
 
 ## Known rough edges (kit / Nous fixes that would remove the traps)
 These are the changes that would make this truly one-click for a friend:

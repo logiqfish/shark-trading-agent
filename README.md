@@ -52,7 +52,7 @@ terminal**. Full provisioning walkthrough with screenshots: **[SETUP.md](SETUP.m
 2. **Install the Shark distribution.** Open the Hermes app's **App terminal** (a shell in
    your browser — no SSH) and paste:
    ```
-   hermes profile install github.com/logiqfish/shark-starter-kit
+   hermes profile install github.com/logiqfish/shark-trading-agent
    ```
    It pulls the SOUL, the `shark` skill, and the cron, and writes a **`.env.EXAMPLE`**
    listing exactly the two Alpaca keys.
