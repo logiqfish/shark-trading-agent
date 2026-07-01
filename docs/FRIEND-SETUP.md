@@ -52,20 +52,28 @@ printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://p
 **CONFIGURE** (connect your bot) → flip the **toggle to enabled**. ⚠️ **This is
 per-profile** — see Trap #1.
 
-**6. Restart — NOT the dashboard button.** The dashboard's **"Restart Gateway" button
-hangs** (Trap #2). Instead restart the container from the **Hostinger panel** → **Docker
-Manager** → restart the Hermes Agent app (or **Reboot VPS**). This loads all your keys +
-connects Telegram.
+**6. Restart the container, then START the gateway.** Restart the container from the
+**Hostinger panel** → **Docker Manager** → restart the Hermes Agent app (loads your keys).
+Then, in the **App terminal**, start the gateway — **nothing runs without it** (no chat, no
+cron):
+```
+nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
+```
+⚠️ Don't use the dashboard's "Restart Gateway" button (Trap #2). After this, the dashboard
+should read **Gateway Status: Running**.
 
 **7. Set the home channel** — in the **Telegram chat** with the bot, send **`/sethome`**.
-(The gateway must be up first — that's why this is after the restart.) Cron cards will
-deliver to this chat.
+(The gateway must be up first — that's why this is after step 6.) Cron cards deliver here.
 
-**8. Schedule the trading scan** — just **ask the bot in plain English** in Telegram:
-> *"set up the weekday-trading cron"*
-
-It'll register the shipped `weekday-trading` job (10am/1pm/3pm ET, weekdays). ⚠️ **`/cron`
-is NOT a command** — type it as a normal request, no leading slash (Trap #3).
+**8. Schedule the trading scan (App terminal).** The CRON page starts **empty** — the
+shipped job isn't auto-registered. Register it with the right hours (UTC — there's no
+timezone flag, so `0 14,17,19` = 10am/1pm/3pm ET during EDT; winter/EST = `0 15,18,20`):
+```
+hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
+```
+Verify: `hermes cron list` → `Next run …T14:00:00+00:00`. _(Easier but less precise: ask the
+bot "set up the weekday-trading cron" — but it may pick the wrong timezone; the CLI is
+reliable. `/cron` is not a slash command — Trap #3.)_
 
 **9. Verify** — ask the bot **"what's my portfolio status"** → a live Alpaca card (equity,
 positions) means you're done. The scan then fires on schedule and pushes cards here.
@@ -79,10 +87,12 @@ answers Telegram. Your **shark-trading-agent** profile has its **own** Telegram 
 **Disabled** (CHANNELS page). So after install the bot can go silent — you must enable
 Telegram *for this profile* (step 5). The first bot working is a red herring.
 
-**Trap #2 — The dashboard "Restart Gateway" button hangs.** In this container it sticks at
-"Hermes Gateway Starting…" and never finishes. **Don't use it.** Restart from the
-**Hostinger panel** (Docker Manager → restart app, or Reboot VPS) instead — that always
-works.
+**Trap #2 — the dashboard "Restart Gateway" button doesn't persist.** It runs the gateway
+in the *foreground*, sticks at "Hermes Gateway Starting…", and dies when you leave the page
+— so the status falsely reads **Stopped** and cron never fires. **Start the gateway from the
+App terminal instead:** `nohup hermes gateway run > /opt/data/gateway.log 2>&1 &` (inside
+Docker `hermes gateway install` is a no-op — the container is the service manager). This
+persists across closing the terminal, but **re-run it after any container restart**.
 
 **Trap #3 — the shipped cron may not show up where you expect.** It lives on the **CRON**
 page (enable it there if it's listed) — but the **Blueprints** tab shows only Hermes'

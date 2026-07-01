@@ -294,16 +294,28 @@ That's the whole install — Phase 6 drives the first run and turns on the sched
 **Goal:** drive one heartbeat by hand and watch it work end-to-end, then schedule the
 ~3×/day cadence.
 
-1. **Find the job.** The kit ships a `weekday-trading` cron job (**CRON** page), disabled
-   by default: `0 10,13,15 * * 1-5` America/New_York, `--skill shark`. _(It's on the
-   **CRON** page, not the **Blueprints** tab. If your build doesn't list it there, use the
-   non-technical fallback: ask the bot in plain English to register it — "set up the
-   weekday-trading cron" — per [docs/FRIEND-SETUP.md](docs/FRIEND-SETUP.md).)_
-2. **Run it once by hand.** Hit the ⚡ **run-now** on the job card (or CLI
-   `hermes cron run <id>`). Watch **LOGS** — you should see
-   `cron.scheduler: Job '<id>': ... completed successfully`. The full report is saved as a
-   dated file under the profile's `cron/output/<id>/` regardless of delivery.
-3. **Enable** the job (toggle on the CRON card) so the 3×/day schedule fires.
+1. **Make sure the gateway is running.** Cron only fires while the gateway runs. In the App
+   terminal, start it and confirm the dashboard reads **Gateway Status: Running**:
+   ```
+   nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
+   hermes cron list          # must NOT warn "Gateway is not running"
+   ```
+   Inside Docker `hermes gateway install` is a no-op, and the dashboard **Restart Gateway**
+   button only runs the gateway in the *foreground* (hangs at "Hermes Gateway Starting…";
+   status then falsely reads Stopped). `nohup … &` persists past closing the terminal, but
+   **re-run it after any container restart**.
+2. **Register the job (CLI).** The shipped `cron/weekday-trading.json` is a **template — not
+   auto-registered** (the CRON page starts empty; this build has no `--file`/import).
+   Register it with the real prompt and a UTC schedule — `hermes cron create` has **no
+   `--timezone` flag**, so the schedule runs on the container clock (UTC): `0 14,17,19` =
+   10 AM / 1 PM / 3 PM ET during **EDT** (`0 15,18,20` in EST):
+   ```
+   hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
+   ```
+   Verify: `hermes cron list` → `Next run …T14:00:00+00:00` (= 10 AM ET).
+3. **Run it once by hand.** `hermes cron run <id>` (id from `hermes cron list`). Watch
+   **LOGS** for `cron.scheduler: Job '<id>': ... completed successfully`. The full report is
+   saved under `cron/output/<id>/` regardless of delivery. The job then fires on schedule.
 
 ### Where do the cards go? (delivery)
 
@@ -317,9 +329,10 @@ without Telegram. With `local`, each fire's summary card is written to the job's
 2. **Home channel set** — send **`/sethome`** in the chat you want the cards in. This
    writes `TELEGRAM_HOME_CHANNEL` to your profile `.env`; **without it the bot is
    connected but cron has nowhere to deliver.**
-3. **Switch the job to telegram** — edit the `weekday-trading` job's **delivery** from
-   `local` to `telegram` (CRON → edit, or `hermes cron edit <id> --deliver telegram`),
-   then **Restart Gateway**.
+3. **Switch the job to telegram** — recreate it with `--deliver telegram` (delete +
+   `hermes cron create … --deliver telegram`, or `hermes cron edit <id> --deliver telegram`
+   if your build supports it), then make sure the gateway is running
+   (`nohup hermes gateway run > /opt/data/gateway.log 2>&1 &`).
 
 > **Heads-up — every fire posts a card.** The job prompt intentionally emits a one-line
 > status card on *every* fire (trade, no-trade, or market-closed), so a healthy bot is

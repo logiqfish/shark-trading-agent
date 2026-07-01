@@ -39,24 +39,29 @@ paper account, and the `weekday-trading` cron fires the shark routine headless
    - Edit it from the **App terminal** (e.g. `nano`/append). The dashboard **FILES** page
      is **download-only** — you cannot edit `.env` in-browser there (see Known Issues).
 
-3. **Enable the cron.** The kit ships `cron/weekday-trading.json` (disabled by default,
-   `deliver: local`, schedule `0 10,13,15 * * 1-5` America/New_York). Enable it on the
-   dashboard **CRON** page, or via CLI:
+3. **Register the cron (CLI).** The shipped `cron/weekday-trading.json` is a **template — it
+   is NOT auto-registered** (the CRON page starts empty; this build has no `--file`/import).
+   Register it with the real prompt and a UTC schedule:
    ```
-   hermes cron create '0 10,13,15 * * 1-5' '<prompt from weekday-trading.json>' \
-     --name weekday-trading --skill shark --deliver local
+   hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
    ```
    - `--deliver local` keeps it **headless** — the gateway runs the scheduler with **zero
-     messaging platforms** (confirmed; the "No messaging platforms enabled" log line is a
-     non-fatal warning, the gateway continues for cron). Telegram is optional, for push.
-   - The CLI has **no `--timezone` flag**; if creating via CLI, convert to UTC
-     (10/13/15 ET → `0 14,17,19` UTC in EDT). The shipped **JSON keeps the tz field**, so
-     enabling the shipped job is the DST-safe path.
+     messaging platforms**. For push cards use `--deliver telegram` (after `/sethome`).
+   - **No `--timezone` flag** — `hermes cron create` runs the schedule on the container
+     clock (**UTC**). `0 14,17,19` = 10 AM / 1 PM / 3 PM ET during **EDT**; in **EST** use
+     `0 15,18,20`. Verify: `hermes cron list` → `Next run …T14:00:00+00:00` (= 10 AM ET).
 
-4. **Restart to load the `.env`** — `.env` is **not** hot-reloaded, so a restart is
-   required after any key change. Use the dashboard **Restart Gateway** button (bottom-left);
-   **if it hangs**, restart the container from the **Hostinger panel → Docker Manager**
-   (or Reboot VPS) instead — that always works (see Gotchas).
+4. **Load the `.env`, then RUN the gateway.** `.env` is **not** hot-reloaded, so restart the
+   container (Hostinger → Docker Manager) after any key change. Then **start the gateway** —
+   cron won't fire without it (`hermes cron list` warns *"Gateway is not running"*):
+   ```
+   nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
+   ```
+   Inside Docker `hermes gateway install` is a no-op ("the container is your service
+   manager"), and the dashboard **Restart Gateway** button only runs it in the *foreground*
+   (hangs at "Hermes Gateway Starting…"; status then falsely reads **Stopped**).
+   `nohup … &` survives closing the terminal — but **re-run it after a container restart**.
+   Confirm **Gateway Status: Running** in the dashboard.
 
 5. **Verify:**
    - Telegram: ask the bot **"what's my portfolio status"** → should return a live Alpaca

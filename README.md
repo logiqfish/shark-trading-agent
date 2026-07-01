@@ -137,24 +137,38 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
    token) and **enable it for the active `shark-trading-agent` profile** — not the default
    Hermes bot. Skip this if you only want headless cron.
 
-5. **Restart to load everything — restart the *container*, not the gateway button.** The
-   `.env` isn't hot-reloaded, so restart once now from **Hostinger panel → Docker Manager**
-   (restart the Hermes app, or Reboot VPS). ⚠️ **Avoid the dashboard's "Restart Gateway"
-   button** — it runs the gateway in the *foreground* and hangs at "Hermes Gateway
-   Starting…" forever (it looks broken but isn't). A **container** restart brings the
-   gateway up as a background service that survives and reports status correctly. One
-   restart picks up all keys + the channel.
+5. **Restart to load the `.env`, then start the gateway.** The `.env` isn't hot-reloaded,
+   so first restart from **Hostinger panel → Docker Manager** (restart the Hermes app, or
+   Reboot VPS). Then **start the gateway** — nothing runs (no chat, no cron) without a
+   running gateway. In the container's **App terminal**:
+   ```
+   nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
+   ```
+   ⚠️ **Don't use the dashboard's "Restart Gateway" button** — it runs the gateway in the
+   *foreground*, hangs at "Hermes Gateway Starting…", and dies when you leave the page (the
+   status can then falsely read **Stopped**). Inside Docker, `hermes gateway install` is a
+   no-op — the container *is* the service manager. Confirm **Gateway Status: Running** in the
+   dashboard. _(This survives closing the terminal but **not** a full container restart —
+   re-run `hermes gateway run` after any Docker restart.)_
 
 6. **Smoke-test it by hand.** In **CHAT** (or Telegram): *"Run the shark skill now for a
    single fire."* During market hours you'll see it read the regime, surface a candidate,
    run the debate, and — if it trades — place a broker-protected paper entry and a journal
    slip. Confirm the order in your Alpaca paper account.
 
-7. **Enable the schedule.** The cron installs **disabled** on purpose. Turn it on in the
-   **CRON** page (job `weekday-trading`, 10:00 / 13:00 / 15:00 ET, Mon–Fri). _If it isn't
-   listed on the CRON page in your build, ask the bot in plain English to register it —
-   "set up the weekday-trading cron"._ If you wired Telegram, send **`/sethome`** in the
-   chat where you want the trade cards delivered.
+7. **Schedule the trading scan (CLI).** The shipped `cron/weekday-trading.json` is a
+   *template* — it is **not** auto-registered, and the CRON page starts empty. Register it
+   from the **App terminal** (the gateway from step 5 must be running, or jobs won't fire):
+   ```
+   hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
+   ```
+   ⚠️ **Timezone:** `hermes cron create` has **no `--timezone` flag**, so the schedule runs
+   on the container's clock (**UTC**). `0 14,17,19` = **10 AM / 1 PM / 3 PM ET during EDT**;
+   in winter (EST) use `0 15,18,20`. Verify with `hermes cron list` → `Next run …T14:00:00+00:00`.
+   To push the fire cards to Telegram, send **`/sethome`** in your chat and use
+   `--deliver telegram` instead of `local`. _(Prefer a guided menu? You can instead tell the
+   bot "set up the weekday-trading cron" — but the CLI sets the exact schedule + prompt
+   deterministically.)_
 
 8. **(Optional) Gut trades — the bot as your "second brain."** Separate from the scheduled
    scan, you can hand it a stock *you* picked and have it pressure-test your gut before any
