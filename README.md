@@ -1,4 +1,4 @@
-# Shark Starter Kit
+# Shark Trading Agent — Starter Kit
 
 A skinny, **paper-only** trading bot you run on your own VPS as a **Hermes Agent profile
 distribution**, with **two keys**. Unlike research/rating-only agent demos, **this one
