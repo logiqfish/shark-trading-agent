@@ -116,17 +116,20 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
    SOUL, the `shark` skill, and the cron, and generates the profile **`.env`**. **⚠️
    Everything below binds to the *active* profile — so it must come after this line.**
 
-3. **Set all three keys in the profile `.env` — in the App terminal.** The FILES page is
-   **download-only**, so append them in the terminal (this *appends*, won't wipe anything).
-   Alpaca **paper** keys from app.alpaca.markets (Paper account); the LLM key from
-   openrouter.ai (it starts `sk-or-`):
-   ```
-   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nOPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
-   ```
-   Then pick the model: **MODELS → `deepseek/deepseek-v4-pro`** (or any OpenRouter model).
-   _Putting the LLM key in the profile `.env` here is deliberate: the GUI **KEYS** page can
-   write it to the **global** env the profile doesn't read — the #1 cause of "No LLM
-   provider configured" even though the model is selected._
+3. **Configure the active profile** (all of it binds to the profile you activated in step 2):
+   - **Get your keys.** Alpaca **paper** key + secret from
+     [app.alpaca.markets](https://app.alpaca.markets/) (switch to the **Paper** account);
+     the LLM key from [openrouter.ai](https://openrouter.ai/) (it starts `sk-or-`).
+   - **Put all three in the profile `.env` — via the App terminal.** The FILES page is
+     **download-only**, so append them in the terminal (this *appends*, won't wipe anything):
+     ```
+     printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nOPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+     ```
+     _The LLM key goes in the profile `.env` **on purpose**: the GUI **KEYS** page can write
+     it to the **global** env the profile doesn't read — the #1 cause of "No LLM provider
+     configured" even though the model looks selected._
+   - **Pick the model.** In **MODELS**, set the main model to **`deepseek/deepseek-v4-pro`**
+     (or any OpenRouter model). This part *is* per-profile, so the GUI is fine here.
 
 4. **(Optional) Telegram — for THIS profile.** In **CHANNELS**, connect Telegram (QR or bot
    token) and **enable it for the active `shark-trading-agent` profile** — not the default
