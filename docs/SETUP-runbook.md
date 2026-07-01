@@ -1,93 +1,102 @@
-# Shark Trading Agent — Setup Runbook (validated 2026-06-26)
+# Shark Trading Agent — Setup Runbook (validated end-to-end 2026-07-01)
 
-A concise, **reproducible** setup for the skinny Hermes paper-trading agent, distilled
-from a real end-to-end install on a Hostinger VPS (Hermes Agent app, v0.17.0). For the
-verbose maintainer walkthrough see `SETUP.md`; this file is the "happy path" plus the
-sharp edges we actually hit.
+A concise, **reproducible** happy-path for the skinny Hermes paper-trading agent, distilled
+from a full from-scratch install on a Hostinger VPS (Hermes Agent app, **v0.17.0**). For the
+verbose walkthrough with screenshots see `SETUP.md`; the friendly no-jargon version is
+`FRIEND-SETUP.md`. Do the steps **in order** — most failures come from doing them out of order.
 
-**Outcome when done:** the bot answers "what's my portfolio status" with a live Alpaca
-paper account, and the `weekday-trading` cron fires the shark routine headless
-(no messaging platform required).
+**Outcome when done:** the bot answers "what's my portfolio status" with a live Alpaca paper
+account, and the `weekday-trading` cron fires the shark routine on schedule.
 
-## What the friend provides
+## What you provide
+- **Alpaca paper** key + secret (app.alpaca.markets → **Paper** account → API keys).
+- **One LLM key** — OpenRouter by default (`sk-or-…`), model `deepseek/deepseek-v4-pro`.
+- A Hostinger VPS with the **Hermes Agent** app running (gives the dashboard + in-browser
+  **App terminal** — no SSH needed).
 
-- **2 keys:** Alpaca **paper** key + secret, and **one LLM key** (OpenRouter by default →
-  `deepseek/deepseek-v4-pro`).
-- A Hostinger VPS with the **Hermes Agent** app running (gives the in-browser dashboard +
-  App terminal).
+## Steps (in order)
 
-## Steps
-
-1. **Install the profile** (one CLI line in the **App terminal**):
+1. **Install AND activate the profile — FIRST.** One CLI line in the **App terminal**.
+   Everything you configure after this binds to the **active** profile, so this must come
+   before any keys/model/Telegram (otherwise they attach to Hermes' *default* profile):
    ```
    hermes profile install github.com/logiqfish/shark-trading-agent -y
    hermes profile use shark-trading-agent
    ```
-   Confirm it's active: dashboard → **PROFILES** shows `shark-trading-agent@x.y.z [active]`.
+   Confirm: dashboard → **PROFILES** shows `shark-trading-agent [active]`.
 
-2. **Put ALL keys in the _profile_ `.env`** — this is the load-bearing step:
-   `/opt/data/profiles/shark-trading-agent/.env`
+2. **Put ALL keys in the _profile_ `.env`** — one command, in the App terminal. This is the
+   load-bearing step (`ALPACA_BASE_URL` included — the agent refuses to trade without it):
    ```
-   ALPACA_API_KEY=...
-   ALPACA_SECRET_KEY=...
-   ALPACA_BASE_URL=https://paper-api.alpaca.markets
-   OPENROUTER_API_KEY=sk-or-v1-...
+   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://paper-api.alpaca.markets\nOPENROUTER_API_KEY=sk-or-v1-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
    ```
-   - ⚠️ **Must be the _profile_ `.env`, not the global `/opt/data/env`.** Hermes reads the
-     active profile's `.env` for keys; a key in the global env is silently ignored
-     (`hermes doctor` will say "No API key found" even though a key exists elsewhere).
-   - Edit it from the **App terminal** (e.g. `nano`/append). The dashboard **FILES** page
-     is **download-only** — you cannot edit `.env` in-browser there (see Known Issues).
+   - ⚠️ **Must be the _profile_ `.env`** (`/opt/data/profiles/shark-trading-agent/.env`),
+     **not** the global `/opt/data/.env`. The dashboard **KEYS/MODELS** page writes the LLM
+     key to the *global* env, which the profile does **not** read → the bot says *"No LLM
+     provider configured"* even though the model is selected. The App-terminal `.env` above
+     is the location that actually works.
+   - The **FILES** page is **download-only** — you can't edit `.env` in-browser.
+   - Re-running the `printf` just appends duplicate lines (harmless — last value wins). To
+     tidy: `cd /opt/data/profiles/shark-trading-agent && cp .env .env.bak && tac .env.bak | awk -F= '!seen[$1]++' | tac > .env`.
 
-3. **Register the cron (CLI).** The shipped `cron/weekday-trading.json` is a **template — it
-   is NOT auto-registered** (the CRON page starts empty; this build has no `--file`/import).
-   Register it with the real prompt and a UTC schedule:
-   ```
-   hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
-   ```
-   - `--deliver local` keeps it **headless** — the gateway runs the scheduler with **zero
-     messaging platforms**. For push cards use `--deliver telegram` (after `/sethome`).
-   - **No `--timezone` flag** — `hermes cron create` runs the schedule on the container
-     clock (**UTC**). `0 14,17,19` = 10 AM / 1 PM / 3 PM ET during **EDT**; in **EST** use
-     `0 15,18,20`. Verify: `hermes cron list` → `Next run …T14:00:00+00:00` (= 10 AM ET).
+3. **Pick the main model.** Dashboard → **MODELS** → set **MAIN MODEL** to
+   `deepseek/deepseek-v4-pro` (or any OpenRouter model). Model selection *is* per-profile, so
+   the GUI is fine here — it's only the *key* that must go in the `.env` (step 2).
 
-4. **Load the `.env`, then RUN the gateway.** `.env` is **not** hot-reloaded, so restart the
-   container (Hostinger → Docker Manager) after any key change. Then **start the gateway** —
-   cron won't fire without it (`hermes cron list` warns *"Gateway is not running"*):
+4. **(Optional) Telegram — for THIS profile.** Dashboard → **CHANNELS** → connect Telegram
+   (QR or bot token) and **enable it for the active `shark-trading-agent` profile** (not the
+   default bot). Skip if you only want headless cron.
+
+5. **Start the gateway** — nothing runs (no chat, no cron) without a running gateway. In the
+   App terminal:
    ```
    nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
    ```
-   Inside Docker `hermes gateway install` is a no-op ("the container is your service
-   manager"), and the dashboard **Restart Gateway** button only runs it in the *foreground*
-   (hangs at "Hermes Gateway Starting…"; status then falsely reads **Stopped**).
-   `nohup … &` survives closing the terminal — but **re-run it after a container restart**.
-   Confirm **Gateway Status: Running** in the dashboard.
+   - ⚠️ Inside Docker `hermes gateway install` is a **no-op** ("the container is your service
+     manager"), and the dashboard **"Restart Gateway" button** only runs the gateway in the
+     *foreground* — it hangs at "Hermes Gateway Starting…" and the status then falsely reads
+     **Stopped**. Use `hermes gateway run`, not the button.
+   - `nohup … &` survives closing the terminal, but **re-run it after a full container
+     restart** (Docker Manager / reboot). If a gateway is already running with stale config,
+     restart the container first, then run the command.
+   - Confirm **Gateway Status: Running** in the dashboard (and `hermes cron list` no longer
+     warns *"Gateway is not running"*).
 
-5. **Verify:**
-   - Telegram: ask the bot **"what's my portfolio status"** → should return a live Alpaca
-     card (equity / cash / positions).
-   - Or a manual fire: `hermes cron run <job-id>` → expect `Ran now: succeeded` and **no**
-     `request_dump_cron_*` error dump written. A healthy fire runs ~8 min (full routine).
+6. **Register the cron (CLI).** The shipped `cron/weekday-trading.json` is a **template — NOT
+   auto-registered** (the CRON page starts empty; this build has no `--file`/import). Register
+   it with the real prompt and a **UTC** schedule:
+   ```
+   hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
+   ```
+   - **No `--timezone` flag** — the schedule runs on the container clock (**UTC**).
+     `0 14,17,19` = 10 AM / 1 PM / 3 PM ET during **EDT**; in **EST** use `0 15,18,20`.
+     Verify: `hermes cron list` → `Next run …T14:00:00+00:00` (= 10 AM ET).
+   - `--deliver local` writes cards to LOGS/SESSIONS (headless). For Telegram cards: send
+     `/sethome` in the target chat, then recreate the job with `--deliver telegram`.
 
-## Known issues (kit bugs to smooth out — found 2026-06-26)
+7. **Verify.**
+   - Dashboard **CHAT** (or Telegram, if wired): *"what's my portfolio status"* → a live
+     Alpaca card (equity / cash / positions) means keys + brain + gateway all work.
+   - Manual fire: `hermes cron run <job-id>` (id from `hermes cron list`) → watch **LOGS** for
+     `cron.scheduler: Job '<id>': ... completed successfully`. A healthy fire runs ~8 min.
 
-1. **Keys can land in the wrong env file.** Setting the LLM key via the dashboard MODELS
-   page wrote it to the **global** `/opt/data/env`, which Hermes does **not** read for the
-   profile → "Provider authentication failed." Workaround: put keys in the **profile**
-   `.env` via the App terminal. *Fix: make the GUI key-setting target the active profile's
-   `.env`.*
-2. **FILES page is download-only.** A friend cannot edit `.env` in the dashboard, so
-   "configure via GUI" is incomplete — key edits require the App terminal. *Fix: add
-   in-browser editing, or document the terminal step prominently.*
-3. **Cron shipped `deliver: telegram`.** Wrong for a zero-messaging kit — a friend with no
-   Telegram would get delivery errors. *Fixed 2026-06-26: shipped json now `deliver: local`.*
+## Known issues on this Hermes v0.17.0 build (real friction, all handled above)
+1. **LLM key lands in the wrong env file.** The dashboard KEYS/MODELS page writes it to the
+   *global* `/opt/data/.env`, which the profile ignores → "No LLM provider configured." Fix:
+   put the key in the **profile** `.env` (step 2).
+2. **`ALPACA_BASE_URL` is not auto-injected.** The manifest declares a default, but a
+   hand-written profile `.env` doesn't get it — set it explicitly (step 2).
+3. **Gateway is not auto-started / doesn't persist.** You must `hermes gateway run` (step 5),
+   and re-run it after a container restart. The dashboard button runs it in the foreground
+   (hangs; status false-reads Stopped).
+4. **Cron is not auto-registered and has no per-job timezone.** Register via CLI in UTC
+   (step 6). The shipped JSON's `timezone` field can't be applied through `hermes cron create`.
+5. **FILES page is download-only** — all `.env` edits go through the App terminal.
 
 ## Gotchas worth remembering
-
-- Run container commands as the **`hermes`** user; root-owned writes into `/opt/data`
-  silently break config.
-- The gateway is a dashboard-managed TUI process; restart via the dashboard **Restart
-  Gateway** button, not an ad-hoc `hermes gateway restart` over SSH (no systemd in the
-  container → it hangs / dies on SIGHUP). **If the dashboard button itself hangs** (seen on
-  some builds), restart the container from the **Hostinger panel → Docker Manager**
-  (or Reboot VPS) — that is the reliable fallback.
+- Configure in order: **install+activate profile → keys/model/Telegram → gateway → cron.**
+  Out of order, config binds to the default profile.
+- `.env` is **not** hot-reloaded at the gateway level, but the agent reloads it per run — so
+  adding a key is usually picked up on the next message; restart the gateway if not.
+- Run container commands as the **`hermes`** user where possible; root-owned writes into
+  `/opt/data` can break config.
