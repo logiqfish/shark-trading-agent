@@ -262,7 +262,7 @@ skills, cron job, and config as one installable agent. Installing it is a single
    append the keys from the App terminal (paper keys from app.alpaca.markets -> the
    **Paper** account — never a live account):
    ```
-   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://paper-api.alpaca.markets\n' >> /opt/data/profiles/shark-trading-agent/.env
    ```
    Your LLM key is already set from Phase 3.
 3. **Restart** so the new profile + env load (`.env` is not hot-reloaded). If the

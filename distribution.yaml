@@ -4,7 +4,9 @@
 # The installer reads env_requires below and generates the profile .env listing the
 # two required Alpaca values (plus an optional paper-endpoint default). The FILES page
 # is download-only, so add the keys from the in-browser App terminal:
-#   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+#   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://paper-api.alpaca.markets\n' >> /opt/data/profiles/shark-trading-agent/.env
+# Set ALPACA_BASE_URL explicitly (the paper endpoint) — the manifest default below is
+# not auto-injected into a hand-written profile .env, and the agent won't trade without it.
 # Your LLM key is set once in the dashboard KEYS page, not here.
 name: shark-trading-agent
 version: 1.0.0

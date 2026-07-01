@@ -120,10 +120,12 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
    - **a. Get your keys.** Alpaca **paper** key + secret from
      [app.alpaca.markets](https://app.alpaca.markets/) (switch to the **Paper** account);
      the LLM key from [openrouter.ai](https://openrouter.ai/) (it starts `sk-or-`).
-   - **b. Put all three in the profile `.env` — via the App terminal.** The FILES page is
-     **download-only**, so append them in the terminal (this *appends*, won't wipe anything):
+   - **b. Put the keys in the profile `.env` — via the App terminal.** The FILES page is
+     **download-only**, so append them in the terminal (this *appends*, won't wipe anything).
+     Include **`ALPACA_BASE_URL`** (the paper endpoint) — the agent refuses to trade without
+     it:
      ```
-     printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nOPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+     printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://paper-api.alpaca.markets\nOPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
      ```
      _The LLM key goes in the profile `.env` **on purpose**: the GUI **KEYS** page can write
      it to the **global** env the profile doesn't read — the #1 cause of "No LLM provider
@@ -135,9 +137,13 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
    token) and **enable it for the active `shark-trading-agent` profile** — not the default
    Hermes bot. Skip this if you only want headless cron.
 
-5. **Restart to load everything.** The `.env` isn't hot-reloaded, so restart once now —
-   dashboard **Restart Gateway**, or if it hangs, **Hostinger panel → Docker Manager**
-   (restart the Hermes app, or Reboot VPS). One restart picks up all keys + the channel.
+5. **Restart to load everything — restart the *container*, not the gateway button.** The
+   `.env` isn't hot-reloaded, so restart once now from **Hostinger panel → Docker Manager**
+   (restart the Hermes app, or Reboot VPS). ⚠️ **Avoid the dashboard's "Restart Gateway"
+   button** — it runs the gateway in the *foreground* and hangs at "Hermes Gateway
+   Starting…" forever (it looks broken but isn't). A **container** restart brings the
+   gateway up as a background service that survives and reports status correctly. One
+   restart picks up all keys + the channel.
 
 6. **Smoke-test it by hand.** In **CHAT** (or Telegram): *"Run the shark skill now for a
    single fire."* During market hours you'll see it read the regime, surface a candidate,

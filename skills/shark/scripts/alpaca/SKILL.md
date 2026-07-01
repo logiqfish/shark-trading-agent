@@ -20,7 +20,7 @@ This skill is a thin wrapper: each script does one Alpaca call, returns raw JSON
 
 All scripts live under `${HERMES_SKILL_DIR}/scripts/alpaca/`. They read `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` from the environment.
 
-**Env is auto-injected — do not source a `.env`.** The two Alpaca keys are declared in `distribution.yaml` (`env_requires`); Hermes passes them into the `terminal` sandbox automatically when the skill loads, so the scripts read `$ALPACA_API_KEY` directly. If a script returns `ALPACA_API_KEY not set`, the keys are missing from the profile `.env` — add them via the App terminal (`printf 'ALPACA_API_KEY=…\nALPACA_SECRET_KEY=…\n' >> /opt/data/profiles/shark-trading-agent/.env`) and restart. Never hand-source a file, and never print keys.
+**Env is auto-injected — do not source a `.env`.** The two Alpaca keys are declared in `distribution.yaml` (`env_requires`); Hermes passes them into the `terminal` sandbox automatically when the skill loads, so the scripts read `$ALPACA_API_KEY` directly. If a script returns `ALPACA_API_KEY not set`, the keys are missing from the profile `.env` — add them via the App terminal (`printf 'ALPACA_API_KEY=…\nALPACA_SECRET_KEY=…\nALPACA_BASE_URL=https://paper-api.alpaca.markets\n' >> /opt/data/profiles/shark-trading-agent/.env`) and restart. `ALPACA_BASE_URL` (the paper endpoint) must be set explicitly — the agent won't trade without it. Never hand-source a file, and never print keys.
 
 **Read scripts:**
 

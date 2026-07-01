@@ -45,7 +45,7 @@ model). Without this the bot has no brain.
 **4. Alpaca keys** — the KEYS page **won't** take these (it only does LLM/OAuth keys), so
 add them in the **App terminal** (this *appends*, it won't wipe your OpenRouter key):
 ```
-printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://paper-api.alpaca.markets\n' >> /opt/data/profiles/shark-trading-agent/.env
 ```
 
 **5. Telegram for THIS profile** — dashboard → **CHANNELS** → **Telegram** row →
