@@ -1,6 +1,6 @@
 # debate — bull/bear/referee conviction debate
 
-Part of the Shark Starter Kit. Replaces single-shot conviction with a bounded
+Part of the Shark Trading Agent. Replaces single-shot conviction with a bounded
 Bull → Bear → Referee debate. The Referee emits the 0–100 conviction that feeds
 HEARTBEAT Step 5 (floor 65) and Step 5.5 (risk bands) unchanged.
 

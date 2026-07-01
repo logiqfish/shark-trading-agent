@@ -1,7 +1,7 @@
 # DEBATE.md — bull/bear/referee conviction debate (prompt spec)
 
 The prompt spec the agent's brain runs for the conviction debate: the roles and the
-output contract. Part of the Shark Starter Kit.
+output contract. Part of the Shark Trading Agent.
 
 ## What this replaces
 
@@ -15,7 +15,7 @@ N=65) and Step 5.5 (risk bands) **unchanged**.
 Once per **buyable candidate carried in from Step 3.5** (already legal, already
 capped to the top 3–5 by Step 3). **Single round, three turns. No re-arguing** —
 that bound is what keeps cost bounded and is the only reason this is safe to run
-on every fire. The full Trade Eligibility Gate (IDENTITY.md) still runs first and
+on every fire. The full Trade Eligibility Gate (AGENTS.md) still runs first and
 the debate never overrides it: the debate produces *conviction*, the gates
 produce *legality*.
 

@@ -11,7 +11,8 @@ actually trades** — with discipline:
 
 It runs on exactly two keys and nothing else:
 
-1. **Alpaca (paper)** — market data *and* execution.
+1. **Alpaca (paper)** — market data *and* execution. Free at
+   **[alpaca.markets](https://alpaca.markets/)** (use a **paper** account).
 2. **An LLM** — the single trading brain. Use **[OpenRouter](https://openrouter.ai/)** for
    this key and you can **swap brains** (DeepSeek, Claude, GPT, Gemini…) from one account by
    changing a single setting — no re-install. DeepSeek is a good, cheap default to start.
@@ -44,10 +45,13 @@ prompt instructs the agent not to fetch outside data — but because the agent h
 access, this fence is enforced by instruction, not a sandbox. Production-grade containment
 would add network egress controls at the host/container level.
 
-This is the **skinny** build on purpose. The heavier version — a live catalyst / news /
-earnings / fundamentals **data mesh** feeding the same brain, plus the deeper discovery and
-evidence layers — runs as a separate hosted service and is **not** part of this kit by
-design. If you want access to that, reach out at **[logiqfish.com](https://logiqfish.com)**.
+This is the **skinny** build on purpose. The heavier version wires the same brain into a
+live **data mesh** — real-time news & catalyst detection (web search via **Brave**), deep
+source reads (**Firecrawl**), paid **fundamentals / earnings / analyst** data subscriptions,
+SEC-filing / 8-K monitoring, and a multi-pool **discovery engine** that surfaces market
+movers instead of a static watchlist — plus the deeper evidence and verification layers
+that back each thesis. It runs as a separate hosted service and is **not** part of this kit
+by design. Want that? Reach out at **[logiqfish.com](https://logiqfish.com)**.
 
 **Paper trading only. There is no live-trading path in this kit, by design.**
 
@@ -83,7 +87,7 @@ terminal**.
 > **Fastest working path → [docs/FRIEND-SETUP.md](docs/FRIEND-SETUP.md).** That guide
 > reflects the currently validated Hostinger / Hermes v0.17.0 setup, including two rough
 > edges the steps below account for (the FILES page is download-only; the dashboard's
-> "Restart Gateway" button can hang). Full provisioning walkthrough with screenshots:
+> "Restart Gateway" button can hang). Full step-by-step provisioning walkthrough:
 > **[SETUP.md](SETUP.md)**.
 
 1. **Stand up Hermes v0.17.0** on a small VPS and configure your **LLM brain** (KEYS →
@@ -108,6 +112,10 @@ terminal**.
    ```
    Get the keys from app.alpaca.markets → switch to the **Paper** account → generate keys.
    Your **LLM key is already set in KEYS** (step 1) — it does **not** go in this `.env`.
+   _(Known issue: on some builds the KEYS/MODELS page writes the LLM key to the global env
+   the profile doesn't read, so the brain reports "Provider authentication failed." If that
+   happens, add the LLM key to the **profile** `.env` from the App terminal too — see
+   [docs/SETUP-runbook.md](docs/SETUP-runbook.md).)_
 
 4. **Restart to load the keys.** The `.env` is read on restart (it isn't hot-reloaded).
    The dashboard's "Restart Gateway" button can hang in some containers — if it does,
@@ -120,8 +128,10 @@ terminal**.
    slip. Confirm the order in your Alpaca paper account.
 
 6. **Enable the schedule.** The cron installs **disabled** on purpose. Turn it on in the
-   **CRON** page (job `weekday-trading`, ~10:00 / 13:00 / 15:30 ET, Mon–Fri). If you wired
-   Telegram, send **`/sethome`** in the chat where you want the trade cards delivered.
+   **CRON** page (job `weekday-trading`, 10:00 / 13:00 / 15:00 ET, Mon–Fri). _If it isn't
+   listed on the CRON page in your build, ask the bot in plain English to register it —
+   "set up the weekday-trading cron"._ If you wired Telegram, send **`/sethome`** in the
+   chat where you want the trade cards delivered.
 
 7. **(Optional) Gut trades — the bot as your "second brain."** Separate from the scheduled
    scan, you can hand it a stock *you* picked and have it pressure-test your gut before any

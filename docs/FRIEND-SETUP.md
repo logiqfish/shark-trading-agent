@@ -75,10 +75,12 @@ Telegram *for this profile* (step 5). The first bot working is a red herring.
 **Hostinger panel** (Docker Manager → restart app, or Reboot VPS) instead — that always
 works.
 
-**Trap #3 — Cron isn't in the dashboard.** The **Blueprints** tab shows Hermes' generic
-templates (briefings, reminders), **not** the shark scan. And **`/cron` is not a slash
-command**. To schedule it, **ask the bot in plain English** ("set up the weekday-trading
-cron") — it has a cron tool and will do it.
+**Trap #3 — the shipped cron may not show up where you expect.** It lives on the **CRON**
+page (enable it there if it's listed) — but the **Blueprints** tab shows only Hermes'
+generic templates (briefings, reminders), **not** the shark scan, and **`/cron` is not a
+slash command**. If you don't see the `weekday-trading` job on the CRON page, the reliable
+non-technical path is to **ask the bot in plain English** ("set up the weekday-trading
+cron") — it has a cron tool and will register it.
 
 **Also good to know:**
 - The bot is **brainless until steps 2+3 are done** — before that it replies *"Provider

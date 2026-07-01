@@ -20,7 +20,8 @@ paper account, and the `weekday-trading` cron fires the shark routine headless
 
 1. **Install the profile** (one CLI line in the **App terminal**):
    ```
-   hermes profile install <source>     # github.com/logiqfish/shark-trading-agent once pushed
+   hermes profile install github.com/logiqfish/shark-trading-agent -y
+   hermes profile use shark-trading-agent
    ```
    Confirm it's active: dashboard → **PROFILES** shows `shark-trading-agent@x.y.z [active]`.
 
@@ -51,8 +52,10 @@ paper account, and the `weekday-trading` cron fires the shark routine headless
      (10/13/15 ET → `0 14,17,19` UTC in EDT). The shipped **JSON keeps the tz field**, so
      enabling the shipped job is the DST-safe path.
 
-4. **Restart Gateway** (dashboard button, bottom-left) so it loads the `.env`.
-   `.env` is **not** hot-reloaded — a restart is required after any key change.
+4. **Restart to load the `.env`** — `.env` is **not** hot-reloaded, so a restart is
+   required after any key change. Use the dashboard **Restart Gateway** button (bottom-left);
+   **if it hangs**, restart the container from the **Hostinger panel → Docker Manager**
+   (or Reboot VPS) instead — that always works (see Gotchas).
 
 5. **Verify:**
    - Telegram: ask the bot **"what's my portfolio status"** → should return a live Alpaca
@@ -77,6 +80,8 @@ paper account, and the `weekday-trading` cron fires the shark routine headless
 
 - Run container commands as the **`hermes`** user; root-owned writes into `/opt/data`
   silently break config.
-- The gateway is a dashboard-managed TUI process; **restart via the dashboard button**,
-  not an ad-hoc `hermes gateway restart` over SSH (no systemd in the container → it hangs /
-  dies on SIGHUP).
+- The gateway is a dashboard-managed TUI process; restart via the dashboard **Restart
+  Gateway** button, not an ad-hoc `hermes gateway restart` over SSH (no systemd in the
+  container → it hangs / dies on SIGHUP). **If the dashboard button itself hangs** (seen on
+  some builds), restart the container from the **Hostinger panel → Docker Manager**
+  (or Reboot VPS) — that is the reliable fallback.

@@ -1,6 +1,6 @@
 # reflection — self-grading trade journal
 
-Part of the Shark Starter Kit. This skill records every entry, grades it at its
+Part of the Shark Trading Agent. This skill records every entry, grades it at its
 real exit on realized R **and alpha vs SPY**, has the agent's **own brain** write a
 2–3 sentence lesson, and feeds recent lessons back into the next decision.
 
@@ -11,7 +11,7 @@ deterministic math + file I/O; the heartbeat brain writes the prose lesson inlin
 ## Storage
 
 `JOURNAL.md` — git-tracked, kit top-level. It rides the Step 7 commit so it
-survives across fires, like `IDENTITY.md`. The gitignored `memory/` directory is
+survives across fires, like `AGENTS.md`. The gitignored `memory/` directory is
 wiped every run and must NOT be used.
 
 `reflection.sh` resolves the journal at `../../JOURNAL.md` relative to this skill

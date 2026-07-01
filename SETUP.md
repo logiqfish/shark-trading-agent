@@ -211,16 +211,18 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
      another agent's token — one bot can only be polled by one instance).
    Then flip the channel **toggle to enabled**. _(Verified live 2026-06-24: the QR path
    created the bot and connected on the first scan; the bot replied via deepseek-v4-pro.)_
-4. **Set the home channel: `/sethome`.** In the bot chat, the agent notes *"No home
-   channel is set — a home channel is where Hermes delivers cron job results and
-   cross-platform messages."* Send **`/sethome`** in the chat where you want the bot to
-   post — **this is where the scheduled heartbeat's trade cards will land** (Phase 6).
-   _Note: a fresh bot talks as the **default Hermes persona** ("I can help with coding,
-   research, file management…"); installing the kit (Phase 5) is what makes it the Shark
-   trading bot._
 3. **Restart Gateway, then Test.** The gateway is **Off** by default ("Configure channels
    here, then start the gateway"). After enabling Telegram, hit **Restart Gateway**
-   (bottom-left) — it connects each enabled channel on restart — then **Test**.
+   (bottom-left) — it connects each enabled channel on restart — then **Test**. _(If the
+   dashboard button hangs, restart the container from the Hostinger panel → Docker Manager
+   instead — see Phase 5.)_
+4. **Set the home channel: `/sethome`.** The gateway must be up first — that's why this is
+   after the restart. In the bot chat, the agent notes *"No home channel is set — a home
+   channel is where Hermes delivers cron job results and cross-platform messages."* Send
+   **`/sethome`** in the chat where you want the bot to post — **this is where the
+   scheduled heartbeat's trade cards will land** (Phase 6). _Note: a fresh bot talks as the
+   **default Hermes persona** ("I can help with coding, research, file management…");
+   installing the kit (Phase 5) is what makes it the Shark trading bot._
 
 **End of Phase 4** — Telegram is live; you can DM the agent.
 
@@ -237,9 +239,11 @@ skills, cron job, and config as one installable agent. Installing it is a single
    container), run:
    ```
    hermes profile install github.com/logiqfish/shark-trading-agent -y
+   hermes profile use shark-trading-agent
    ```
    This pulls the `shark` skill (all trading scripts), `SOUL.md` (persona), `AGENTS.md`
-   (rules), and the disabled `weekday-trading` cron job onto the box.
+   (rules), and the disabled `weekday-trading` cron job onto the box, and makes it the
+   active profile (dashboard → **PROFILES** shows `shark-trading-agent [active]`).
 2. **Set your Alpaca paper keys — in the App terminal.** The install generates a profile
    `.env` from the manifest's `env_requires`. The **FILES** page is **download-only**, so
    append the keys from the App terminal (paper keys from app.alpaca.markets -> the
@@ -305,8 +309,8 @@ without Telegram. With `local`, each fire's summary card is written to the job's
    then **Restart Gateway**.
 
 > **Heads-up — every fire posts a card.** The job prompt intentionally emits a one-line
-> status card on *every* fire (trade, no-trade, or market-closed), like the reference
-> lab agents. Earlier kit builds prefixed no-action fires with `[SILENT]`, which silently
+> status card on *every* fire (trade, no-trade, or market-closed), so a healthy bot is
+> always visibly alive. Earlier kit builds prefixed no-action fires with `[SILENT]`, which silently
 > suppressed delivery and made a correctly-running bot look dead ("did it even fire?").
 > If you'd rather stay quiet on no-action, re-add `[SILENT]` to the prompt — but expect
 > long stretches of silence on slow days.

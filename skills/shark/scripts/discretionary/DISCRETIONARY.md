@@ -1,6 +1,6 @@
 # Discretionary Entry ("2nd brain" gut trade) — agent hook
 
-Part of the Shark Starter Kit. **Out of band** — human-initiated only; never runs
+Part of the Shark Trading Agent. **Out of band** — human-initiated only; never runs
 on the scheduled scan. Trigger: the **account owner** messages a trade directive
 ("take TTWO", "buy TTWO stop 222"). A non-owner asking about a stock gets analysis
 only — never an execution.

@@ -1,6 +1,6 @@
 # `risk` — position-sizing + pre-trade risk gate
 
-Part of the Shark Starter Kit. Stdlib-only, jq-free. A guardrail that lives
+Part of the Shark Trading Agent. Stdlib-only, jq-free. A guardrail that lives
 in-process — it cannot fail-open on a network outage.
 
 ## What it does
@@ -14,8 +14,8 @@ in-process — it cannot fail-open on a network outage.
   computable dire-gates (concentration 25%, single-session drawdown 5%,
   earnings blackout 48h).
 
-All constants live at the top of `risk.py` — the single source for
-DECISION-POLICY.md §3 / §7 #4.
+All constants live at the top of `risk.py` — the single source for the
+Trade Eligibility Gate and risk rules in `AGENTS.md`.
 
 ## CLI
 

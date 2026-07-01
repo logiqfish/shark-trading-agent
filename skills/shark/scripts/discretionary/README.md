@@ -1,4 +1,4 @@
-# discretionary — Shark Starter Kit skill
+# discretionary — Shark Trading Agent skill
 
 Human "2nd brain" gut-trade entry. Lets the account owner hand the bot a ticker
 ("take TTWO") and get a gated, bracketed proposal back — never a raw buy.

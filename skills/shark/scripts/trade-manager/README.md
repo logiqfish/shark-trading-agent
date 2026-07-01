@@ -1,6 +1,6 @@
 # `trade-manager` — deterministic exit / position-management skill
 
-Part of the Shark Starter Kit. Owns a position's lifecycle after the brain decides
+Part of the Shark Trading Agent. Owns a position's lifecycle after the brain decides
 to buy. **"LLM as quant analyst, code as the execution desk."**
 
 ## Status
@@ -102,7 +102,7 @@ before the close instead of relying on an overnight audit loop:
 
 ## How it wires into the HEARTBEAT
 
-In `HEARTBEAT.md`, the execution step replaces "market buy + place_stop" with a
+In the shark procedure (`SKILL.md`), the execution step replaces "market buy + place_stop" with a
 single call:
 
 ```bash

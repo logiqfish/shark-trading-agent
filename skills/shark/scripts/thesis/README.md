@@ -1,6 +1,6 @@
 # thesis — persistent trade-thesis store + zero-LLM re-score
 
-Part of the Shark Starter Kit. **Code computes, brain judges** — this module does
+Part of the Shark Trading Agent. **Code computes, brain judges** — this module does
 the deterministic checks + file I/O; the agent's own brain re-argues conviction
 (the debate) **only when this module says the thesis materially moved.**
 
@@ -21,7 +21,7 @@ changed — built native (jq-free, fail-soft).
 
 **Hard rule:** the store is a git-tracked file, **never** `memory/` (the gitignored
 vector store is wiped per fire) — so `THESES.json` survives across fires exactly
-like `JOURNAL.md`/`IDENTITY.md`. Writes are atomic (`tmp + os.replace`). Paths
+like `JOURNAL.md`/`AGENTS.md`. Writes are atomic (`tmp + os.replace`). Paths
 override with `SHARK_THESES_PATH` / `SHARK_THESES_ARCHIVE_PATH`.
 
 ## Schema (one thesis)
