@@ -1,4 +1,4 @@
-# Shark Starter Kit — Setup Runbook (validated 2026-06-26)
+# Shark Trading Agent — Setup Runbook (validated 2026-06-26)
 
 A concise, **reproducible** setup for the skinny Hermes paper-trading agent, distilled
 from a real end-to-end install on a Hostinger VPS (Hermes Agent app, v0.17.0). For the

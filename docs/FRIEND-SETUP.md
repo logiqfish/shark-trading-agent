@@ -1,4 +1,4 @@
-# Shark Starter Kit — Friend Setup (no SSH, no operator)
+# Shark Trading Agent — Friend Setup (no SSH, no operator)
 
 A from-scratch setup a **non-technical friend can do entirely themselves** — using only:
 the **Hostinger panel**, the **in-browser App terminal**, the **Hermes dashboard**, and

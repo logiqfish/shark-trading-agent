@@ -1,4 +1,4 @@
-# Hermes Agent Profile Distribution — Shark Starter Kit
+# Hermes Agent Profile Distribution — Shark Trading Agent
 # Install (in the Hermes App terminal, in your browser):
 #   hermes profile install github.com/logiqfish/shark-trading-agent
 # The installer reads env_requires below and writes a .env.EXAMPLE listing exactly

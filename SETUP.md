@@ -1,4 +1,4 @@
-# Shark Starter Kit — Setup Guide
+# Shark Trading Agent — Setup Guide
 
 A paper-trading bot you run on your own small server. Two keys, no shared infrastructure,
 nothing of ours touching your box. When it's done it watches the market a few times a day,
@@ -226,7 +226,7 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
 
 ---
 
-## Phase 5 — Install the Shark Starter Kit
+## Phase 5 — Install the Shark Trading Agent
 
 **Goal:** the kit's identity + heartbeat + skills running on the agent, with your two keys set.
 
