@@ -1,0 +1,36 @@
+# Hermes Agent Profile Distribution — Shark Starter Kit
+# Install (in the Hermes App terminal, in your browser):
+#   hermes profile install github.com/fishlogiq/shark-starter-kit
+# The installer reads env_requires below and writes a .env.EXAMPLE listing exactly
+# the two Alpaca keys for you to fill (in the FILES page — no terminal needed).
+# Your LLM key is set once in the dashboard KEYS page, not here.
+name: shark-starter-kit
+version: 1.0.0
+description: "Whole-share swing paper-trading agent — discover, bull/bear debate, conviction gate, risk-sized bracketed entry, managed exits, self-grading journal, persistent thesis. Two keys: Alpaca paper + an LLM."
+hermes_requires: ">=0.17.0"
+author: "fishlogiq"
+license: "MIT"
+
+# The two keys the friend provides. The LLM brain is configured separately in the
+# dashboard (KEYS + MODELS), so it is intentionally NOT listed here — that keeps the
+# promise literally "two keys and nothing else" for the trading scripts.
+env_requires:
+  - name: ALPACA_API_KEY
+    description: "Alpaca PAPER API key — app.alpaca.markets → switch to the Paper account → generate keys. Paper only."
+    required: true
+  - name: ALPACA_SECRET_KEY
+    description: "Alpaca PAPER API secret (paired with ALPACA_API_KEY)."
+    required: true
+  - name: ALPACA_BASE_URL
+    description: "Alpaca paper endpoint. Leave as the default — do not point at a live account."
+    required: false
+    default: "https://paper-api.alpaca.markets"
+
+# Files this distribution owns and may overwrite on `hermes profile update`.
+# Runtime state (theses, journal, portfolio) is deliberately excluded so updates
+# never wipe the friend's history.
+distribution_owned:
+  - SOUL.md
+  - AGENTS.md
+  - skills/shark/
+  - cron/weekday-trading.json

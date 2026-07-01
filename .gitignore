@@ -1,0 +1,27 @@
+# secrets & runtime state — never commit
+.env
+*.env
+.env.EXAMPLE
+auth.json
+gateway_*
+channel_directory.json
+sessions/
+logs/
+*.db
+*.db-*
+config.yaml
+config.yaml.*
+memories/
+state/
+JOURNAL.md
+THESES.json
+THESES_ARCHIVE.*
+run-history/
+
+# OS / tooling junk — never commit
+.DS_Store
+.pytest_cache/
+
+# raw, un-redacted setup screenshots — NEVER commit (capture here, redact, then
+# copy the safe version into docs/setup/images/ which IS tracked)
+_private-screenshots/

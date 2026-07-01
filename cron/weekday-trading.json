@@ -1,0 +1,9 @@
+{
+  "name": "weekday-trading",
+  "schedule": "0 10,13,15 * * 1-5",
+  "timezone": "America/New_York",
+  "skill": "shark",
+  "deliver": "local",
+  "enabled": false,
+  "prompt": "Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card."
+}
