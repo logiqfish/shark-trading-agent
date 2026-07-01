@@ -240,11 +240,17 @@ skills, cron job, and config as one installable agent. Installing it is a single
    ```
    This pulls the `shark` skill (all trading scripts), `SOUL.md` (persona), `AGENTS.md`
    (rules), and the disabled `weekday-trading` cron job onto the box.
-2. **Set your Alpaca paper keys.** The install generates a profile `.env` from the
-   manifest's `env_requires`. In **FILES**, open the profile's **`.env`** and set
-   `ALPACA_API_KEY` + `ALPACA_SECRET_KEY` (paper keys from app.alpaca.markets -> the
-   **Paper** account — never a live account). Your LLM key is already set from Phase 3.
-3. **Restart Gateway** so the new profile + env load (`.env` is not hot-reloaded).
+2. **Set your Alpaca paper keys — in the App terminal.** The install generates a profile
+   `.env` from the manifest's `env_requires`. The **FILES** page is **download-only**, so
+   append the keys from the App terminal (paper keys from app.alpaca.markets -> the
+   **Paper** account — never a live account):
+   ```
+   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+   ```
+   Your LLM key is already set from Phase 3.
+3. **Restart** so the new profile + env load (`.env` is not hot-reloaded). If the
+   dashboard's **Restart Gateway** button hangs, restart from the **Hostinger panel ->
+   Docker Manager** (restart the Hermes app, or Reboot VPS) instead.
 
 That's the whole install — Phase 6 drives the first run and turns on the schedule.
 

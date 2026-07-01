@@ -25,7 +25,9 @@ bills).
 - **Debates** each candidate bull vs. bear and scores a 0–100 conviction.
 - **Gates** every trade through a deterministic risk kernel (position size, cash reserve,
   R/R ≥ 2:1, −3% daily-loss halt, no averaging down, once-per-ticker).
-- **Enters** with a GTC bracket (stop at −1R, target at +2R) — never a naked position.
+- **Enters** with broker-side protection: primary path is a GTC bracket (stop at −1R,
+  target at +2R); if the broker rejects the bracket, the fallback is a market entry + a
+  separate GTC stop. Never naked — if stop protection can't be confirmed, it liquidates.
 - **Manages** exits in code: scales half at +1R, lifts the runner's stop to breakeven,
   rides to +2R.
 - **Journals** every trade and self-grades it at exit (realized R + alpha vs SPY).
@@ -47,7 +49,13 @@ would add network egress controls at the host/container level.
 ## Install (everything in your browser — no terminal of your own)
 
 You stand up Hermes once, then install Shark with a single line in the **in-browser App
-terminal**. Full provisioning walkthrough with screenshots: **[SETUP.md](SETUP.md)**.
+terminal**.
+
+> **Fastest working path → [docs/FRIEND-SETUP.md](docs/FRIEND-SETUP.md).** That guide
+> reflects the currently validated Hostinger / Hermes v0.17.0 setup, including two rough
+> edges the steps below account for (the FILES page is download-only; the dashboard's
+> "Restart Gateway" button can hang). Full provisioning walkthrough with screenshots:
+> **[SETUP.md](SETUP.md)**.
 
 1. **Stand up Hermes v0.17.0** on a small VPS and configure your **LLM brain** (KEYS →
    your provider key; MODELS → pick the model — DeepSeek recommended). Optionally connect
@@ -57,31 +65,37 @@ terminal**. Full provisioning walkthrough with screenshots: **[SETUP.md](SETUP.m
 2. **Install the Shark distribution.** Open the Hermes app's **App terminal** (a shell in
    your browser — no SSH) and paste:
    ```
-   hermes profile install github.com/logiqfish/shark-trading-agent
+   hermes profile install github.com/logiqfish/shark-trading-agent -y
+   hermes profile use shark-trading-agent
    ```
-   It pulls the SOUL, the `shark` skill, and the cron, and writes a **`.env.EXAMPLE`**
-   listing exactly the two Alpaca keys.
+   It pulls the SOUL, the `shark` skill, and the cron, and generates the profile **`.env`**
+   (from the manifest's `env_requires`) declaring exactly the two Alpaca keys.
 
-3. **Set your two Alpaca paper keys — in the FILES page (GUI).** In **FILES**, open the
-   installed profile folder, copy its **`.env.EXAMPLE` → `.env`**, and paste your values:
-   - `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` — from app.alpaca.markets → switch to the
-     **Paper** account → generate keys. (Leave `ALPACA_BASE_URL` on the paper endpoint.)
+3. **Set your two Alpaca paper keys — in the App terminal.** The FILES page is
+   **download-only**, so add the keys from the App terminal (this *appends* — it won't
+   wipe anything else in the file):
+   ```
+   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+   ```
+   Get the keys from app.alpaca.markets → switch to the **Paper** account → generate keys.
    Your **LLM key is already set in KEYS** (step 1) — it does **not** go in this `.env`.
 
-4. **Restart Gateway** (bottom-left). The `.env` is read on restart (it isn't hot-reloaded),
-   so the keys take effect now.
+4. **Restart to load the keys.** The `.env` is read on restart (it isn't hot-reloaded).
+   The dashboard's "Restart Gateway" button can hang in some containers — if it does,
+   restart from the **Hostinger panel → Docker Manager** (restart the Hermes app, or
+   Reboot VPS) instead.
 
 5. **Smoke-test it by hand.** In **CHAT** (or Telegram): *"Run the shark skill now for a
    single fire."* During market hours you'll see it read the regime, surface a candidate,
-   run the debate, and — if it trades — place a bracketed paper entry and a journal slip.
-   Confirm the order in your Alpaca paper account.
+   run the debate, and — if it trades — place a broker-protected paper entry and a journal
+   slip. Confirm the order in your Alpaca paper account.
 
 6. **Enable the schedule.** The cron installs **disabled** on purpose. Turn it on in the
    **CRON** page (job `weekday-trading`, ~10:00 / 13:00 / 15:30 ET, Mon–Fri). If you wired
    Telegram, send **`/sethome`** in the chat where you want the trade cards delivered.
 
 7. **(Optional) Gut trades.** DM the bot **"take TICKER"** — it debates the ticker, shows
-   what it *would* place, and waits for your **yes/no** before any bracketed paper entry.
+   what it *would* place, and waits for your **yes/no** before any broker-protected paper entry.
 
 **Updating:** `hermes profile update` re-pulls the SOUL/skill/cron. Your runtime state
 (journal, theses, portfolio) is excluded from the distribution, so updates never wipe your
