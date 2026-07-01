@@ -93,9 +93,18 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
 > "Restart Gateway" button can hang). Full step-by-step provisioning walkthrough:
 > **[SETUP.md](SETUP.md)**.
 
-1. **Stand up Hermes v0.17.0** on a small VPS and get to the **dashboard + App terminal**.
-   **Don't set any keys or the model yet** — that comes *after* the Shark profile is active
-   (step 2), or it lands on Hermes' default profile. *(SETUP.md Phases 1–2.)*
+1. **Stand up Hermes v0.17.0** on a small VPS — the always-on box that runs the agent:
+   - **Provision the VPS.** On [Hostinger](https://www.hostinger.com/vps-hosting), choose the
+     **one-click Hermes Agent** app so Hermes comes pre-installed. (Any provider works — on a
+     plain Ubuntu box, install Hermes via the
+     [Nous quickstart](https://hermes-agent.nousresearch.com/docs/).) *(SETUP.md Phase 1.)*
+   - **Set an admin username + password** on the deploy form and **save them** — that's your
+     dashboard login.
+   - **Wait ~5 min** for provisioning; the box comes up with Hermes already running.
+   - **Open the dashboard** (VPS Overview → **Open app**), sign in, and find the **App
+     terminal** (a browser shell — no SSH). *(SETUP.md Phase 2.)*
+   - ⚠️ **Don't set any keys or the model yet** — that comes *after* the Shark profile is
+     active (step 2), or it binds to Hermes' **default** profile.
 
 2. **Install AND activate the Shark profile — do this FIRST.** Open the Hermes app's **App
    terminal** (a browser shell — no SSH) and paste:
