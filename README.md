@@ -7,6 +7,8 @@ actually trades** — with discipline:
 > discover → bull/bear debate → conviction gate → bracketed entry → managed exit →
 > self-grading journal → persistent thesis.
 
+**New here?** Read the 2-minute orientation → [docs/WHAT_YOU_GET.md](docs/WHAT_YOU_GET.md).
+
 It runs on exactly two keys and nothing else:
 
 1. **Alpaca (paper)** — market data *and* execution.
