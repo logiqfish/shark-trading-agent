@@ -1,9 +1,5 @@
 # Shark Starter Kit — Setup Guide
 
-> **Status: being validated on a real install (2026-06-24).** Steps are filled in
-> and confirmed as the install is actually performed, so this is a tested walkthrough,
-> not a guess. Sections marked _(pending live run)_ aren't confirmed yet.
-
 A paper-trading bot you run on your own small server. Two keys, no shared infrastructure,
 nothing of ours touching your box. When it's done it watches the market a few times a day,
 debates each idea bull-vs-bear, and places disciplined paper trades — and you can DM it a
@@ -33,18 +29,20 @@ ticker to get its read.
 > root**. On non-Hostinger hosts you provision a plain Ubuntu box and install Hermes
 > manually (the "Portable" path below); everything from Phase 3 on is identical.
 
-- Provider used here: **Hostinger** (KVM VPS).
-- Plan / size: _(pending — capturing the plan you pick)_
-- Region: _(pending)_
-- OS image: _(pending — Ubuntu 24.04 LTS expected)_
-- Access: _(pending — root password or SSH key)_
+**Quick reference for the box:**
+- **Provider:** Hostinger KVM VPS (example — any host works).
+- **Plan / size:** KVM 1 (1 vCPU / 4 GB) is enough; KVM 2 (2 vCPU / 8 GB) is a comfortable known-good config (see step 5).
+- **Region:** closest to you / your market (US for US-market trading).
+- **OS image:** Ubuntu 24.04 LTS — or, on Hostinger, the one-click **Hermes Agent** app.
+- **Access:** root password or SSH key.
 
 > **Two paths to a running Hermes:**
 > - **Primary (easiest — used in this walkthrough):** on Hostinger, the VPS "what to
 >   install" step has a one-click **Hermes Agent** Docker app — Hermes comes
 >   pre-installed and running. Phases 1+2 collapse into this single choice.
-> - **Portable (any provider):** a bare Ubuntu 24.04 box + a manual Hermes install.
->   For DigitalOcean / Hetzner / Vultr / etc. _(documented later — TODO.)_
+> - **Portable (any provider):** a bare Ubuntu 24.04 box + a manual Hermes install
+>   (follow Nous Research's Hermes quickstart), then continue from Phase 3. Works on
+>   DigitalOcean / Hetzner / Vultr / any host.
 
 ### Steps
 
@@ -65,14 +63,14 @@ ticker to get its read.
    Docker", by Nous Research, with **Documentation** + **Quick start** links worth
    bookmarking for Phases 3–4) → click **Select**. This installs Hermes pre-configured;
    you don't install it by hand. _(Portable alternative: choose **Plain OS → Ubuntu
-   24.04 LTS** instead and install Hermes manually — TODO.)_
+   24.04 LTS** instead and install Hermes manually via the Nous Hermes quickstart.)_
    _screenshots: `docs/setup/images/p1-04a-choose-hermes-agent.png`,
    `p1-04b-hermes-agent-modal.png` (redacted)_
 5. **Pick a plan (KVM tier).** **KVM 1** (1 vCPU / 4 GB / 50 GB, ~$6.49/mo intro) is
    enough on paper: the LLM runs remotely (DeepSeek over the API — nothing heavy on the
-   box), the skills are stdlib-only, and it fires just ~3×/day. **For this walkthrough we
-   used KVM 2** (2 vCPU / 8 GB) — a known-good Hermes config, so infra
-   isn't a variable during the first test. You can upgrade in one click anytime, so a
+   box), the skills are stdlib-only, and it fires just ~3×/day. **KVM 2** (2 vCPU / 8 GB)
+   is a comfortable known-good Hermes config if you'd rather not tune. You can upgrade in
+   one click anytime, so a
    friend can safely start on KVM 1 and bump up if `free -h` / `docker stats` shows
    swapping on first run.
    _screenshot: `docs/setup/images/p1-05-plan.png` (redacted)_
@@ -125,13 +123,6 @@ is already done — it's "Running" on the Overview. Three ways in:)_
 - **App terminal** → a web shell straight into the Hermes container (no SSH setup needed).
 - **SSH** → `ssh root@<your-server-ip>` to the host, then `docker exec` into the container
   (used in Phase 5 to place the kit workspace).
-
----
-
-## Phase 2 — Install Hermes
-_(pending live run)_
-
-**Goal:** the base agent running on the box and reachable.
 
 ---
 
@@ -233,118 +224,45 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
 
 **End of Phase 4** — Telegram is live; you can DM the agent.
 
-> ✅ **Milestone (2026-06-24):** the full runtime stack is validated on a fresh box —
-> VPS → Hermes Agent **v0.17.0** → DeepSeek-v4-pro brain → Telegram, all working. What
-> remains is Phase 5 (install the kit), which is the real work because v0.17.0 differs
-> from the Hermes environment the kit was originally built against.
-
 ---
 
 ## Phase 5 — Install the Shark Starter Kit
-_(in progress — the install mechanism depends on the Hermes version)_
 
-**Goal:** the kit's identity + heartbeat + skills run on the agent, with your two keys set.
+**Goal:** the kit's identity + heartbeat + skills running on the agent, with your two keys set.
 
-> **⚠️ Runtime note (discovered live 2026-06-24):** the Hostinger **Hermes Agent is
-> v0.17.0** — a richer framework than the older lab Hermes the kit was first built
-> against. It has its own **SKILLS / PLUGINS / CRON / CONFIG / FILES** subsystems, a
-> **plugin manifest** format, user content under **`~/.hermes/plugins`**, and a
-> **PLUGINS → "Install from GitHub / Git URL"** one-click installer (`owner/repo` →
-> Install). The kit (a lab-Hermes *workspace* of `IDENTITY.md` + `HEARTBEAT.md` +
-> `skills/*.sh`) is **not yet a v0.17.0 plugin**, so it doesn't drop in as-is.
+The kit ships as a **Hermes Profile Distribution** — a git repo that bundles the persona,
+skills, cron job, and config as one installable agent. Installing it is a single command.
 
-**Two roads (decide per goal):**
-- **A — Repackage the kit as a native v0.17.0 plugin/skill bundle** (manifest + skills +
-  a cron-driven heartbeat + identity as system-prompt/config). Yields the
-  friend-friendly **one-click `owner/repo → Install`** experience. The right giveaway
-  end-state; requires learning Hermes' plugin/skill manifest format first (study this
-  PLUGINS page, the docs, and a bundled plugin e.g. `browser-browser-use`).
-- **B — Manual placement for the smoke test** (put files on disk via FILES/App terminal,
-  wire a CRON job to run the heartbeat, set the identity). Faster path just to validate
-  the *trading* logic on this runtime; not the final shape.
+1. **Install the profile.** In the dashboard's **App terminal** (or over SSH into the
+   container), run:
+   ```
+   hermes profile install github.com/logiqfish/shark-starter-kit -y
+   ```
+   This pulls the `shark` skill (all trading scripts), `SOUL.md` (persona), `AGENTS.md`
+   (rules), and the disabled `weekday-trading` cron job onto the box.
+2. **Set your Alpaca paper keys.** The install generates a profile `.env` from the
+   manifest's `env_requires`. In **FILES**, open the profile's **`.env`** and set
+   `ALPACA_API_KEY` + `ALPACA_SECRET_KEY` (paper keys from app.alpaca.markets -> the
+   **Paper** account — never a live account). Your LLM key is already set from Phase 3.
+3. **Restart Gateway** so the new profile + env load (`.env` is not hot-reloaded).
 
-**v0.17.0 recon (so Phase 5 has the map):**
-- Config is one big YAML at **`/opt/data/config.yaml`**, edited via **CONFIG** (sections:
-  General, **Agent [44 fields]**, Memory, Gateway, channels [Discord/Matrix/Mattermost/…],
-  Secrets, …). The **Agent** section is where the **persona / system prompt** lives → the
-  kit's `IDENTITY`/`SOUL` map here.
-- Model is set in General: `deepseek/deepseek-v4-pro`; toolset `hermes-cli`.
-- Custom code installs as **plugins** under `~/.hermes/plugins` (PLUGINS → Install from
-  GitHub); **CRON** schedules; **CHANNELS** wires Telegram/etc.
-- **Data root = `/opt/data`** (FILES page), containing `skills/`, `plugins/`, `cron/`,
-  `hooks/`, `memories/`, `sessions/`, **`.env`** (93 B), and `config.yaml`. **FILES has
-  UPLOAD / CREATE — so the kit can be placed straight from the dashboard, no SSH.**
+That's the whole install — Phase 6 drives the first run and turns on the schedule.
 
-**Placement map (kit → v0.17.0):**
-| Kit piece | Maps to |
+**How the pieces map** (for the curious):
+
+| Kit piece | On the box |
 |---|---|
-| `IDENTITY.md`/`SOUL.md` (persona) | `CONFIG → Agent` section of `/opt/data/config.yaml` |
-| `skills/*.sh` | `/opt/data/skills/` (FILES upload) |
-| Alpaca keys | `/opt/data/.env` (DeepSeek already via KEYS/OpenRouter) |
-| `HEARTBEAT.md` (3×/day loop) | a **CRON** job running the heartbeat prompt |
-| one-click giveaway install | **PLUGINS → Install from GitHub** (once repackaged) |
+| Persona (`SOUL.md`) | system prompt, injected verbatim |
+| Rules / paths (`AGENTS.md`) | agent context file |
+| Trading logic (`skills/shark/scripts/...`) | run via the `terminal` tool, keys auto-injected |
+| Heartbeat (`SKILL.md` procedure) | the `weekday-trading` CRON job |
+| Alpaca keys | profile `.env` (declared in the manifest, auto-injected into the sandbox) |
 
-### Phase 5 DECISION (researched 2026-06-24): repackage the kit as a Hermes **Profile Distribution**
-
-Hermes v0.17.0 has a purpose-built feature for shipping "personality + skills + cron +
-config" as one git-installable, updatable agent: **`hermes profile install
-github.com/<you>/<repo>`**. That's the kit's native install path — *not* a Python plugin
-(plugins are for new LLM-callable tools/hooks in Python; we'd be rewriting working bash
-for nothing). Key fact: a Hermes **skill** bundles a `scripts/` dir and its `SKILL.md`
-tells the agent to run those bash/python scripts via the **`terminal`** tool, with
-declared **env vars auto-injected** — exactly the kit's "orchestration-prompt → calls
-deterministic scripts" shape. And `HERMES_HOME=/opt/data` here, so docs' `~/.hermes/…` =
-`/opt/data/…`.
-
-**Target distribution layout (the kit, re-architected):**
-```
-shark-starter-kit/                 (as a Hermes Profile Distribution)
-├── distribution.yaml              # manifest: name, version, env_requires (ALPACA_*)
-├── SOUL.md                        # ← kit IDENTITY/SOUL (system-prompt slot #1)
-├── AGENTS.md                      # ← kit rules/paths (context file)
-├── config.yaml                   # model/provider defaults (deepseek-v4-pro via OpenRouter)
-├── skills/
-│   └── shark/
-│       ├── SKILL.md               # ← kit HEARTBEAT, rewritten as the per-fire procedure
-│       └── scripts/               # ← all kit bash/python: local-markov, discovery-local,
-│                                  #    risk, trade-manager, reflection, thesis, alpaca,
-│                                  #    debate, discretionary (called via ${HERMES_SKILL_DIR})
-├── cron/
-│   └── weekday-trading.json       # 3×/day weekday job: --skill shark --deliver local (see Phase 6 to switch to telegram)
-├── .gitignore                     # MUST exclude .env, auth.json, memories/, sessions/, *.db
-└── README.md
-```
-- **Cron:** `hermes cron create "0 10,13,15 * * 1-5" "<heartbeat prompt>" --skill shark
-  --deliver local --name weekday-trading` (ships `local` for headless safety; switch to
-  `--deliver telegram` once a home channel is set — see Phase 6). **Pin provider/model**
-  (unattended cost guard). Distribution cron jobs install **disabled** → enable by hand
-  after install.
-- **Identity:** `SOUL.md` in HERMES_HOME (`/opt/data/SOUL.md`), injected verbatim;
-  truncated if too large (exact cap unknown — keep persona here, workflow/paths in AGENTS.md).
-- **Secrets:** Alpaca keys declared in `distribution.yaml` `env_requires` → auto-injected
-  into the `terminal` sandbox; DeepSeek already configured via KEYS/MODELS.
-
-**✅ Pre-check PASSED (verified live 2026-06-24): terminal-sandbox egress to Alpaca works.**
-Asked the bot (via Telegram) to run `curl -s -o /dev/null -w '%{http_code}'
-https://paper-api.alpaca.markets/v2/clock` → it returned **`401`** (reached Alpaca, just
-no creds). So the agent's `terminal`/`execute_code` sandbox has outbound internet to
-Alpaca — the kit's scripts can curl `data.alpaca.markets`/`paper-api` from there. The
-distribution approach is green-lit.
-
-> **Side check (validates the data-fence):** the same test against Yahoo Finance
-> (`query1.finance.yahoo.com/v8/finance/chart/AAPL`) returned **`429` Too Many Requests**
-> — egress reaches Yahoo, but it **rate-limits/blocks this datacenter IP** (the saved
-> `AAPL.json` was Yahoo's error body, not data). Confirmed live why the kit is
-> **Alpaca-only**: a friend can't rely on Yahoo from a VPS. A browser `User-Agent` might
-> sneak through occasionally, but that fragile cat-and-mouse is exactly what the data-fence
-> avoids.
-
-**Other unknowns to verify on the box:** SOUL.md size cap; the `hermes` CLI path inside
-the Hostinger container (for `hermes profile install`).
-
-**Next:** (1) run the egress pre-check; (2) write the repackaging implementation plan
-(kit → Profile Distribution), reusing the existing tested scripts; (3) build + `hermes
-profile install` from the (private) repo; (4) enable the cron; (5) live paper smoke test.
+> **Data-fence (why Alpaca-only):** the kit never fetches market data from the open web —
+> only Alpaca. From a datacenter IP, free sources like Yahoo Finance rate-limit or block
+> requests (HTTP 429), so they're unreliable from a VPS; Alpaca is the single dependable
+> source for both data and execution. The shipped prompt forbids ad-hoc `curl`/web/`pip`
+> for data.
 
 ---
 
