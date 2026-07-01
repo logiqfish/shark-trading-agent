@@ -33,7 +33,10 @@ bills).
 ## What it does NOT do
 
 It has **no news, earnings, or fundamentals feed**. It trades on **price action + the LLM's
-judgment** only, fenced to Alpaca + the LLM — it will not freelance data from anywhere else.
+judgment** only, fenced to Alpaca + the LLM. The shipped scripts call only Alpaca, and the
+prompt instructs the agent not to fetch outside data — but because the agent has terminal
+access, this fence is enforced by instruction, not a sandbox. Production-grade containment
+would add network egress controls at the host/container level.
 
 **Paper trading only. There is no live-trading path in this kit, by design.**
 

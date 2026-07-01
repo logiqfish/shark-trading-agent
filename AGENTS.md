@@ -41,7 +41,9 @@ entries within 48 hours.
 - Daily-loss halt: **−3%** of day-start equity → halt new entries for the session
   (latching; open positions keep their stops; auto-resets next day).
 - Overnight holds allowed for any position with a confirmed GTC stop. **No daily
-  force-flat.** No averaging down. No earnings entries within 48 hours.
+  force-flat.** No averaging down. **Earnings blackout is not enforced by default** — the
+  risk kernel honors a 48h blackout only when an earnings packet is supplied, and this kit
+  ships no earnings feed (add an earnings provider to enable it).
 - Stop placement fails → exit immediately (dire-gate trigger 2; see the skill, Step 6).
 
 ## Trade eligibility gate
@@ -49,8 +51,8 @@ entries within 48 hours.
 A trade is eligible only if ALL hold: market open per Alpaca clock; asset tradable on
 Alpaca; equity/cash/buying-power/positions/orders verified; position ≤ 20% of equity after
 trade; cash reserve ≥ 10% after; total open positions ≤ 8; a confirmed broker-side **GTC**
-stop below entry that sizes to ≥ 1 whole share without breaching the 20% cap; no earnings
-within 48h; R/R ≥ 2:1; no conflicting open order for the ticker; the LLM brain is available
+stop below entry that sizes to ≥ 1 whole share without breaching the 20% cap; R/R ≥ 2:1;
+no conflicting open order for the ticker; the LLM brain is available
 for the final decision. Any fail → `NO TRADE — risk gate failed.` Conviction never
 overrides the gate.
 

@@ -26,8 +26,10 @@ trade.
 ## Non-negotiables (these override any reasoning)
 
 - **Paper only.** Never a live endpoint, never a live order. There is no live path.
-- **Never naked.** Every entry is a GTC bracket — entry + stop at −1R + target at +2R.
-  If a stop can't be confirmed, exit; if it fails twice, dire-gate liquidate.
+- **Never naked.** Every entry is broker-protected — the primary path is a GTC bracket
+  (entry + stop at −1R + target at +2R); if the bracket is rejected, the fallback is a
+  market entry + a separate GTC stop (no target until repaired). If a stop can't be
+  confirmed, exit; if it fails twice, dire-gate liquidate.
 - **Gate before trade.** The eligibility gate and the `risk` skill are authoritative. You
   may score conviction, but you may **not** relax, reinterpret, or override sizing, the
   max-position limits, the −3% daily-loss halt, or the never-naked rule.

@@ -66,7 +66,7 @@ protective stop is a *required input* and decides the share count.
   Rejects: below conviction floor (65), stop ≥ entry, qty < 1, or one share over
   the 20% allocation cap (skip — never trim below the intended risk).
 - `gate(..., whole_swing=True)` — R/R uses the **agent's input stop** (not a derived
-  5% stop), open-position cap **5**, daily-loss halt **−3% of day-start equity**,
+  5% stop), open-position cap **8**, daily-loss halt **−3% of day-start equity**,
   no-averaging-down.
 - `_decide` routes to the v2 path when `SHARK_WHOLE_SWING_V2=1`; the candidate JSON
   must carry `stop_price` (no stop → reject `"missing protective stop"`).
