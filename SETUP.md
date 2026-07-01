@@ -23,13 +23,15 @@ ticker to get its read.
 ---
 
 ## Phase 1 — Provision the VPS
-_(filling in from the live run)_
 
 **Goal:** a fresh Ubuntu server you can SSH into.
 
-> This walkthrough uses **Hostinger**, but any provider works — the only thing that
-> matters is "an Ubuntu 24.04 box you can SSH into as root." DigitalOcean / Hetzner /
-> Vultr / Linode are all fine; the clicks differ but the result is the same.
+> **Hostinger is only the example here, not a requirement.** This walkthrough uses
+> **Hostinger** because its one-click *Hermes Agent* app is the fastest way to a running
+> bot — but **any VPS provider works**: DigitalOcean, Hetzner, Vultr, Linode, AWS/GCP, or
+> a spare box. All the kit actually needs is **an Ubuntu 24.04 server you can SSH into as
+> root**. On non-Hostinger hosts you provision a plain Ubuntu box and install Hermes
+> manually (the "Portable" path below); everything from Phase 3 on is identical.
 
 - Provider used here: **Hostinger** (KVM VPS).
 - Plan / size: _(pending — capturing the plan you pick)_
@@ -69,7 +71,7 @@ _(filling in from the live run)_
 5. **Pick a plan (KVM tier).** **KVM 1** (1 vCPU / 4 GB / 50 GB, ~$6.49/mo intro) is
    enough on paper: the LLM runs remotely (DeepSeek over the API — nothing heavy on the
    box), the skills are stdlib-only, and it fires just ~3×/day. **For this walkthrough we
-   used KVM 2** (2 vCPU / 8 GB) — the proven config the lab runs Hermes on, so infra
+   used KVM 2** (2 vCPU / 8 GB) — a known-good Hermes config, so infra
    isn't a variable during the first test. You can upgrade in one click anytime, so a
    friend can safely start on KVM 1 and bump up if `free -h` / `docker stats` shows
    swapping on first run.
@@ -122,7 +124,7 @@ is already done — it's "Running" on the Overview. Three ways in:)_
   from Phase 1 step 7). This is where the brain + Telegram get configured.
 - **App terminal** → a web shell straight into the Hermes container (no SSH setup needed).
 - **SSH** → `ssh root@<your-server-ip>` to the host, then `docker exec` into the container
-  (the lab-style path, used in Phase 5 to place the kit workspace).
+  (used in Phase 5 to place the kit workspace).
 
 ---
 
@@ -226,7 +228,7 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
 > ✅ **Milestone (2026-06-24):** the full runtime stack is validated on a fresh box —
 > VPS → Hermes Agent **v0.17.0** → DeepSeek-v4-pro brain → Telegram, all working. What
 > remains is Phase 5 (install the kit), which is the real work because v0.17.0 differs
-> from the lab Hermes the kit was built for.
+> from the Hermes environment the kit was originally built against.
 
 ---
 
