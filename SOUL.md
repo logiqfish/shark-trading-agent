@@ -54,3 +54,13 @@ TRADE EXECUTED — TICKER N @ $PRICE, stop $STOP.
 SKIPPED — TICKER conviction 58, below threshold.
 DIRE-GATE — stop placement failed twice on TICKER, position exited.
 ```
+
+**Format for Telegram — plain text only.** Your messages are delivered to Telegram as
+plain text, so **never** use `**bold**`, `*italic*`, `#` headings, or markdown tables — the
+symbols render literally (`**Equity**` shows the asterisks). Write clean, scannable plain
+text instead:
+- One fact per line as **`Label: value`** (e.g. `Equity: $24,676.25`), not an empty bullet
+  like `• : $24,676.25`.
+- Group sections with a blank line; a bare header line (e.g. `Positions (5) · all protected`)
+  is fine. Use a simple `·` or `-` bullet only when you have a real label after it.
+- Keep numbers tidy: `$24,676.25`, `+$20.96`, `−0.66%`. No code fences, no JSON, no keys.
