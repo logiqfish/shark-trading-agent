@@ -94,16 +94,16 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
 > **[SETUP.md](SETUP.md)**.
 
 1. **Stand up Hermes v0.17.0** on a small VPS — the always-on box that runs the agent:
-   - **Provision the VPS.** On [Hostinger](https://www.hostinger.com/vps-hosting), choose the
-     **one-click Hermes Agent** app so Hermes comes pre-installed. (Any provider works — on a
-     plain Ubuntu box, install Hermes via the
+   - **a. Provision the VPS.** On [Hostinger](https://www.hostinger.com/vps-hosting), choose
+     the **one-click Hermes Agent** app so Hermes comes pre-installed. (Any provider works —
+     on a plain Ubuntu box, install Hermes via the
      [Nous quickstart](https://hermes-agent.nousresearch.com/docs/).) *(SETUP.md Phase 1.)*
-   - **Set an admin username + password** on the deploy form and **save them** — that's your
-     dashboard login.
-   - **Wait ~5 min** for provisioning; the box comes up with Hermes already running.
-   - **Open the dashboard** (VPS Overview → **Open app**), sign in, and find the **App
+   - **b. Set an admin username + password** on the deploy form and **save them** — that's
+     your dashboard login.
+   - **c. Wait ~5 min** for provisioning; the box comes up with Hermes already running.
+   - **d. Open the dashboard** (VPS Overview → **Open app**), sign in, and find the **App
      terminal** (a browser shell — no SSH). *(SETUP.md Phase 2.)*
-   - ⚠️ **Don't set any keys or the model yet** — that comes *after* the Shark profile is
+   - **e. ⚠️ Don't set any keys or the model yet** — that comes *after* the Shark profile is
      active (step 2), or it binds to Hermes' **default** profile.
 
 2. **Install AND activate the Shark profile — do this FIRST.** Open the Hermes app's **App
@@ -117,10 +117,10 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
    Everything below binds to the *active* profile — so it must come after this line.**
 
 3. **Configure the active profile** (all of it binds to the profile you activated in step 2):
-   - **Get your keys.** Alpaca **paper** key + secret from
+   - **a. Get your keys.** Alpaca **paper** key + secret from
      [app.alpaca.markets](https://app.alpaca.markets/) (switch to the **Paper** account);
      the LLM key from [openrouter.ai](https://openrouter.ai/) (it starts `sk-or-`).
-   - **Put all three in the profile `.env` — via the App terminal.** The FILES page is
+   - **b. Put all three in the profile `.env` — via the App terminal.** The FILES page is
      **download-only**, so append them in the terminal (this *appends*, won't wipe anything):
      ```
      printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nOPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
@@ -128,7 +128,7 @@ env the profile ignores → *"No LLM provider configured"*; Telegram → the wro
      _The LLM key goes in the profile `.env` **on purpose**: the GUI **KEYS** page can write
      it to the **global** env the profile doesn't read — the #1 cause of "No LLM provider
      configured" even though the model looks selected._
-   - **Pick the model.** In **MODELS**, set the main model to **`deepseek/deepseek-v4-pro`**
+   - **c. Pick the model.** In **MODELS**, set the main model to **`deepseek/deepseek-v4-pro`**
      (or any OpenRouter model). This part *is* per-profile, so the GUI is fine here.
 
 4. **(Optional) Telegram — for THIS profile.** In **CHANNELS**, connect Telegram (QR or bot
