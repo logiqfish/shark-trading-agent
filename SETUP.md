@@ -135,9 +135,14 @@ _(pending live run)_
 
 ---
 
-## Phase 3 — Configure the LLM (DeepSeek)
+## Phase 3 — Configure the LLM (use any provider you like)
 
-**Goal:** Hermes' single brain set to DeepSeek, fail-safe to no-trade if unreachable.
+**Goal:** give Hermes a single brain. **Any LLM works** — the KEYS page supports ~28
+providers (Anthropic/Claude, DeepSeek, Gemini, Kimi/Moonshot, OpenAI, OpenRouter, and
+more). The kit **hardcodes no model**, so pick whichever you have a key for and can
+afford. **DeepSeek is only our suggested default** (strong reasoning, low cost) — not a
+requirement. Whatever you choose, the risk gate stays fail-safe to no-trade if the model
+is unreachable.
 
 **Reaching the dashboard:** click **Open app** on the VPS Overview → the Hermes Agent
 sign-in (Nous Research) → log in with the **admin username/password** from Phase 1
@@ -153,30 +158,33 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
 (MODELS).
 
 **Steps:**
-1. **KEYS → set your LLM provider key.** The KEYS page lists many providers (Anthropic,
-   DeepSeek, Gemini, Kimi/Moonshot, OpenRouter, …) with an "X of 28 configured" counter.
-   Expand your provider and click **Set**:
-   - **DeepSeek** (platform.deepseek.com key) → the kit-faithful "Alpaca + DeepSeek,
-     two keys" path, and it's the **primary brain**. _Recommended for the giveaway._
-   - **OpenRouter** (your own OpenRouter key) also works, but note its field is labeled "for vision,
-     web scraping helpers, and MoA" — it may be treated as **auxiliary**, so confirm in
-     MODELS that an OpenRouter-routed model is actually selectable as the primary brain.
+1. **KEYS → set the provider key for whichever LLM you chose.** The KEYS page lists ~28
+   providers (Anthropic, DeepSeek, Gemini, Kimi/Moonshot, OpenAI, OpenRouter, …) with an
+   "X of 28 configured" counter. Expand **your** provider and click **Set**. Common picks:
+   - **DeepSeek** (platform.deepseek.com key) → the "Alpaca + an LLM = two keys" default;
+     strong reasoning, low cost. _Recommended if you have no preference._
+   - **Anthropic / OpenAI / Gemini** — any works; set your own provider key here, then pick
+     the model in MODELS (step 2).
+   - **OpenRouter** (your own OpenRouter key) → one key, hundreds of models. Note its field
+     is labeled "for vision, web scraping helpers, and MoA," so after setting it, confirm in
+     MODELS that an OpenRouter-routed model is actually selectable as the **main** brain.
    _screenshot: `docs/setup/images/p3-03-keys.png` (redacted — keys are masked as
    `sk-…last4`, but crop anyway)_
 2. **MODELS → set the MAIN MODEL.** The MODELS page has **MODEL SETTINGS** with a
    **MAIN MODEL** (starts `(unset)`) and **AUXILIARY TASKS** (11 helper tasks). Click
-   **CHANGE** on MAIN MODEL and pick a **DeepSeek** model — that's the agent's brain.
+   **CHANGE** on MAIN MODEL and pick **your** model — that's the agent's brain.
    **Leave AUXILIARY TASKS on "all auto"** (they're vision/compression/web-extract
-   helpers; the kit's data-fence means it never uses them). If the picker offers no
-   working DeepSeek brain from your key, set the **DeepSeek** provider key in KEYS and
-   retry. _screenshot: `docs/setup/images/p3-04-models.png`_
+   helpers; the kit's data-fence means it never uses them). If the picker shows no
+   working model, make sure that provider's key is set in KEYS and retry.
+   _screenshot: `docs/setup/images/p3-04-models.png`_
 
-   In the **SET MAIN MODEL** picker, the provider with your key (e.g. **OpenRouter**)
-   lists its models. Pick a DeepSeek one and click **Switch** (saves to `config.yaml`):
-   - **`deepseek/deepseek-v4-pro`** — strongest reasoning; recommended for real trading
-     decisions.
+   In the **SET MAIN MODEL** picker, the provider with your key lists its models. Pick the
+   one you want and click **Switch** (saves to `config.yaml`). **Any capable model works;**
+   as a cost/quality guide, the DeepSeek family is a solid default:
+   - **`deepseek/deepseek-v4-pro`** — strongest reasoning; good for real trading decisions.
    - **`deepseek/deepseek-v4-flash`** — cheaper/faster; a good cost default given the
-     spending-cap warning. _(The kit is brand-agnostic — any capable model works.)_
+     spending-cap warning.
+   - Prefer **Claude, Gemini, GPT, Kimi**, etc.? Pick that instead — the kit hardcodes no model.
    _screenshot: `docs/setup/images/p3-05-set-main-model.png`_
    After **Switch**, the MODELS page shows e.g. `MAIN MODEL: openrouter ·
    deepseek/deepseek-v4-pro`.
@@ -186,7 +194,7 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
    replies. That verifies the brain is wired end-to-end before configuring trading.
    _screenshot: `docs/setup/images/p3-06-gateway-on-chat.png`_
 
-**End of Phase 3** — Hermes has a working DeepSeek brain.
+**End of Phase 3** — Hermes has a working brain (whichever model you picked).
 
 ---
 
