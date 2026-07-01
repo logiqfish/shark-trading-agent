@@ -1,5 +1,12 @@
 # Shark Trading Agent — Starter Kit
 
+![Paper only](https://img.shields.io/badge/trading-paper--only-2ea44f)
+![It actually trades](https://img.shields.io/badge/it-actually%20trades-ff8800)
+![Self-hosted](https://img.shields.io/badge/hosting-self--hosted-blueviolet)
+![Two keys](https://img.shields.io/badge/setup-2%20keys-1f6feb)
+![License MIT](https://img.shields.io/badge/license-MIT-blue)
+![Educational](https://img.shields.io/badge/educational-not%20financial%20advice-critical)
+
 A skinny, **paper-only** trading bot you run on your own VPS as a **Hermes Agent profile
 distribution**, with **two keys**. Unlike research/rating-only agent demos, **this one
 actually trades** — with discipline:
@@ -7,7 +14,8 @@ actually trades** — with discipline:
 > discover → bull/bear debate → conviction gate → bracketed entry → managed exit →
 > self-grading journal → persistent thesis.
 
-**New here?** Read the 2-minute orientation → [docs/WHAT_YOU_GET.md](docs/WHAT_YOU_GET.md).
+> [!TIP]
+> **New here?** Read the 2-minute orientation → [docs/WHAT_YOU_GET.md](docs/WHAT_YOU_GET.md).
 
 It runs on exactly two keys and nothing else:
 
@@ -51,7 +59,8 @@ source reads (**Firecrawl**), paid **fundamentals / earnings / analyst** data su
 SEC-filing / 8-K monitoring, and a multi-pool **discovery engine** that surfaces market
 movers instead of a static watchlist — plus the deeper evidence and verification layers
 that back each thesis. It runs as a separate hosted service and is **not** part of this kit
-by design. Want that? Reach out at **[logiqfish.com](https://logiqfish.com)**.
+by design. Want that? Reach out at **[logiqfish.com](https://logiqfish.com)** or DM
+**[@logiqfish](https://instagram.com/logiqfish)** on Instagram.
 
 **Paper trading only. There is no live-trading path in this kit, by design.**
 
@@ -82,10 +91,13 @@ New here? Three pieces of jargon, explained once:
 ## Install (everything in your browser — no terminal of your own)
 
 You stand up Hermes once, then **install the Shark profile first and configure everything
-against it** — all from the **in-browser App terminal** (no SSH). **Order matters:** any
-key, model, or Telegram channel you set *before* the Shark profile is active binds to
-Hermes' **default** profile instead — which is the #1 setup failure (LLM key → the global
-env the profile ignores → *"No LLM provider configured"*; Telegram → the wrong bot).
+against it** — all from the **in-browser App terminal** (no SSH).
+
+> [!IMPORTANT]
+> **Order matters.** Any key, model, or Telegram channel you set *before* the Shark profile
+> is active binds to Hermes' **default** profile instead — the #1 setup failure (LLM key →
+> the global env the profile ignores → *"No LLM provider configured"*; Telegram → the wrong
+> bot). Install + activate the profile **first**, then configure.
 
 > **Fastest working path → [docs/FRIEND-SETUP.md](docs/FRIEND-SETUP.md).** That guide
 > reflects the currently validated Hostinger / Hermes v0.17.0 setup, including two rough
