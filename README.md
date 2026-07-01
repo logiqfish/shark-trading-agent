@@ -32,7 +32,8 @@ bills).
 
 ## What it does
 
-- **Discovers** candidates from your watchlist (or Alpaca's most-actives) — Alpaca-only.
+- **Discovers** candidates from your watchlist (or
+  [Alpaca](https://alpaca.markets/)'s most-actives) — Alpaca-only.
 - **Debates** each candidate bull vs. bear and scores a 0–100 conviction.
 - **Gates** every trade through a deterministic risk kernel (position size, cash reserve,
   R/R ≥ 2:1, −3% daily-loss halt, no averaging down, once-per-ticker).
@@ -54,8 +55,9 @@ access, this fence is enforced by instruction, not a sandbox. Production-grade c
 would add network egress controls at the host/container level.
 
 This is the **skinny** build on purpose. The heavier version wires the same brain into a
-live **data mesh** — real-time news & catalyst detection (web search via **Brave**), deep
-source reads (**Firecrawl**), paid **fundamentals / earnings / analyst** data subscriptions,
+live **data mesh** — real-time news & catalyst detection (web search via
+**[Brave](https://brave.com/search/api/)**), deep source reads
+(**[Firecrawl](https://firecrawl.dev/)**), paid **fundamentals / earnings / analyst** data subscriptions,
 SEC-filing / 8-K monitoring, and a multi-pool **discovery engine** that surfaces market
 movers instead of a static watchlist — plus the deeper evidence and verification layers
 that back each thesis. It runs as a separate hosted service and is **not** part of this kit
