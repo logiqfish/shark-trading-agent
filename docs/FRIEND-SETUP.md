@@ -21,7 +21,7 @@ Do **all** of steps 1–6 before the single restart, so one restart loads everyt
 **1. Install the profile** — open the **App terminal** (Hostinger app card → "App
 terminal", or dashboard) and run **one line**:
 ```
-hermes profile install github.com/fishlogiq/shark-starter-kit -y
+hermes profile install github.com/logiqfish/shark-starter-kit -y
 hermes profile use shark-starter-kit
 ```
 Dashboard → **PROFILES** should now show `shark-starter-kit [active]`.

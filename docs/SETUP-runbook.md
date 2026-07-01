@@ -20,7 +20,7 @@ paper account, and the `weekday-trading` cron fires the shark routine headless
 
 1. **Install the profile** (one CLI line in the **App terminal**):
    ```
-   hermes profile install <source>     # github.com/fishlogiq/shark-starter-kit once pushed
+   hermes profile install <source>     # github.com/logiqfish/shark-starter-kit once pushed
    ```
    Confirm it's active: dashboard → **PROFILES** shows `shark-starter-kit@x.y.z [active]`.
 

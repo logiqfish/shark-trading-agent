@@ -1,6 +1,6 @@
 # Hermes Agent Profile Distribution — Shark Starter Kit
 # Install (in the Hermes App terminal, in your browser):
-#   hermes profile install github.com/fishlogiq/shark-starter-kit
+#   hermes profile install github.com/logiqfish/shark-starter-kit
 # The installer reads env_requires below and writes a .env.EXAMPLE listing exactly
 # the two Alpaca keys for you to fill (in the FILES page — no terminal needed).
 # Your LLM key is set once in the dashboard KEYS page, not here.
@@ -8,7 +8,7 @@ name: shark-starter-kit
 version: 1.0.0
 description: "Whole-share swing paper-trading agent — discover, bull/bear debate, conviction gate, risk-sized bracketed entry, managed exits, self-grading journal, persistent thesis. Two keys: Alpaca paper + an LLM."
 hermes_requires: ">=0.17.0"
-author: "fishlogiq"
+author: "LogiqFish"
 license: "MIT"
 
 # The two keys the friend provides. The LLM brain is configured separately in the
