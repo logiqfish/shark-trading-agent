@@ -42,6 +42,11 @@ prompt instructs the agent not to fetch outside data — but because the agent h
 access, this fence is enforced by instruction, not a sandbox. Production-grade containment
 would add network egress controls at the host/container level.
 
+This is the **skinny** build on purpose. The heavier version — a live catalyst / news /
+earnings / fundamentals **data mesh** feeding the same brain, plus the deeper discovery and
+evidence layers — runs as a separate hosted service and is **not** part of this kit by
+design. If you want access to that, reach out at **[logiqfish.com](https://logiqfish.com)**.
+
 **Paper trading only. There is no live-trading path in this kit, by design.**
 
 ---
@@ -94,8 +99,23 @@ terminal**.
    **CRON** page (job `weekday-trading`, ~10:00 / 13:00 / 15:30 ET, Mon–Fri). If you wired
    Telegram, send **`/sethome`** in the chat where you want the trade cards delivered.
 
-7. **(Optional) Gut trades.** DM the bot **"take TICKER"** — it debates the ticker, shows
-   what it *would* place, and waits for your **yes/no** before any broker-protected paper entry.
+7. **(Optional) Gut trades — the bot as your "second brain."** Separate from the scheduled
+   scan, you can hand it a stock *you* picked and have it pressure-test your gut before any
+   money moves. DM a plain directive with a **real symbol** (`TICKER` above is just a
+   placeholder — use `NVDA`, `AAPL`, etc.). A sample exchange:
+
+   > **You:** take NVDA
+   >
+   > **Bot:** 🦈 Shark brain on NVDA: conviction 71/100 · regime OK
+   > If you override, I'd place: 12 sh @ ~$168.40 · stop $162.10 · target $181.00 (+2R) · 8%
+   > Override and take it? (yes / no)
+   >
+   > **You:** yes
+
+   It runs the bull/bear debate, sizes the trade through the **same risk kernel** as the
+   scheduled scan, and shows exactly what it *would* place. **Nothing is bought until you
+   reply `yes`** — reply `no` (or don't reply) and it places nothing. You can pin your own
+   stop too: `take NVDA stop 162`.
 
 **Updating:** `hermes profile update` re-pulls the SOUL/skill/cron. Your runtime state
 (journal, theses, portfolio) is excluded from the distribution, so updates never wipe your
