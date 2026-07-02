@@ -154,7 +154,10 @@ against it** — all from the **in-browser App terminal** (no SSH).
 5. **Restart to load the `.env`, then start the gateway.** The `.env` isn't hot-reloaded,
    so first restart from **Hostinger panel → Docker Manager** (restart the Hermes app, or
    Reboot VPS). Then **start the gateway** — nothing runs (no chat, no cron) without a
-   running gateway. In the container's **App terminal**:
+   running gateway. Run this **inside the container** — the App-terminal button drops you in
+   (prompt reads `root@<id>:/opt/hermes#`). If your prompt shows the **host** (`root@srv…`),
+   `hermes`/`/opt/data` don't exist there — enter first with
+   `docker exec -it $(docker ps -qf name=hermes) bash`:
    ```
    nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
    ```

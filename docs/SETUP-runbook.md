@@ -47,8 +47,14 @@ account, and the `weekday-trading` cron fires the shark routine on schedule.
    (QR or bot token) and **enable it for the active `shark-trading-agent` profile** (not the
    default bot). Skip if you only want headless cron.
 
-5. **Start the gateway** — nothing runs (no chat, no cron) without a running gateway. In the
-   App terminal:
+5. **Start the gateway** — nothing runs (no chat, no cron) without a running gateway. Run
+   this **inside the container** — the App-terminal button drops you in (prompt reads
+   `root@<id>:/opt/hermes#`). ⚠️ If your prompt shows the **host** instead (`root@srv…`),
+   `hermes` and `/opt/data` don't exist there — enter the container first:
+   ```
+   docker exec -it $(docker ps -qf name=hermes) bash
+   ```
+   Then:
    ```
    nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
    ```
