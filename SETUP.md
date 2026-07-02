@@ -177,7 +177,7 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
    the agent's brain. **Leave AUXILIARY TASKS on "all auto"** (vision/compression/web-extract
    helpers; the data-fence means the kit never uses them). Model selection *is* per-profile,
    so the GUI is correct here — it's only the *key* that must live in the `.env` (step 1).
-   _screenshot: `docs/setup/images/p3-04-models.png`_
+   ![The MODELS page — MAIN MODEL set to deepseek/deepseek-v4-pro via OpenRouter](docs/setup/images/p3-04-models.png)
 
    In the **SET MAIN MODEL** picker, the provider with your key lists its models. Pick the
    one you want and click **Switch** (saves to `config.yaml`). **Any capable model works;**
