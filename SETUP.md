@@ -55,7 +55,7 @@ ticker to get its read.
 3. **Choose a server location.** Pick the region closest to you / your market. For
    US-market stock trading, **United States** keeps latency to Alpaca low (the picker
    shows a "best latency" estimate). Click **Next**.
-   _screenshot: `docs/setup/images/p1-03-location.png` (redacted)_
+   ![Choose a server location — United States](docs/setup/images/p1-03-location.png)
 4. **Choose what to install → the Hermes Agent app.** On the "Choose what to install"
    screen, search **`Hermes`** and pick the **`Hermes Agent`** Docker application
    (the autonomous agent — **not** `Hermes WebUI`, which is just a web console, and
@@ -64,8 +64,8 @@ ticker to get its read.
    bookmarking for Phases 3–4) → click **Select**. This installs Hermes pre-configured;
    you don't install it by hand. _(Portable alternative: choose **Plain OS → Ubuntu
    24.04 LTS** instead and install Hermes manually via the Nous Hermes quickstart.)_
-   _screenshots: `docs/setup/images/p1-04a-choose-hermes-agent.png`,
-   `p1-04b-hermes-agent-modal.png` (redacted)_
+   ![Choose what to install — search "hermes", pick the Hermes Agent Docker app](docs/setup/images/p1-04a-choose-hermes-agent.png)
+   ![Hermes Agent app detail modal (by Nous Research)](docs/setup/images/p1-04b-hermes-agent-modal.png)
 5. **Pick a plan (KVM tier).** **KVM 1** (1 vCPU / 4 GB / 50 GB, ~$6.49/mo intro) is
    enough on paper: the LLM runs remotely (DeepSeek over the API — nothing heavy on the
    box), the skills are stdlib-only, and it fires just ~3×/day. **KVM 2** (2 vCPU / 8 GB)
@@ -73,13 +73,13 @@ ticker to get its read.
    one click anytime, so a
    friend can safely start on KVM 1 and bump up if `free -h` / `docker stats` shows
    swapping on first run.
-   _screenshot: `docs/setup/images/p1-05-plan.png` (redacted)_
+   ![Pick a KVM plan tier](docs/setup/images/p1-05-plan.png)
 6. **Pick a billing term + check out.** A "Select plan duration" modal appears: longer
    terms are much cheaper per month, but the per-month price **jumps at renewal** (e.g.
    the monthly term renews higher than the 24-month intro rate). **For a test, pick
    1 month** — don't lock into 24 months to try it out. Confirm the payment method →
    **Complete payment**.
-   _screenshot: `docs/setup/images/p1-06-duration-checkout.png` (redacted)_
+   ![Select plan duration + checkout (card details redacted)](docs/setup/images/p1-06-duration-checkout.png)
 7. **Hermes Agent configuration (deploy template).** After checkout, Hostinger shows a
    **"Hermes Agent configuration"** form before it deploys:
    - **ADMIN_USERNAME / ADMIN_PASSWORD** (required) — your **Hermes dashboard** login.
@@ -107,7 +107,7 @@ ticker to get its read.
      you use the web **App terminal** instead).
    - The Hermes app card has **Open app** (the dashboard), **App terminal** (web shell
      into the container), and **Documentation**.
-   _screenshot: `docs/setup/images/p1-09-vps-overview.png` (redacted)_
+   ![VPS Overview — Hermes Agent running (IP redacted)](docs/setup/images/p1-09-vps-overview.png)
 
 **End of Phase 1** — you have a **running Hermes** on your own VPS (the app installed it
 for you; nothing to install by hand).
