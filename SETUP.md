@@ -154,7 +154,8 @@ step 7. The dashboard (this guide is written against **v0.17.0**) has a left nav
 `CHAT · SESSIONS · FILES · MODELS · LOGS · CRON · SKILLS · PLUGINS · MCP · CHANNELS ·
 WEBHOOKS · PAIRING · PROFILES · CONFIG · KEYS`, and a **Gateway Status** indicator at
 the bottom-left (it starts **Off** — we turn it on after configuring).
-_screenshots: `docs/setup/images/p3-01-signin.png`, `p3-02-dashboard.png`_
+![The Hermes dashboard sign-in](docs/setup/images/p3-01-signin.png)
+![The Hermes dashboard — CHAT landing, agent alive on deepseek-v4-pro](docs/setup/images/p3-02-dashboard.png)
 
 Until a brain is configured, **CHAT** shows **"Setup Required — Hermes needs a model
 provider"** and the right panel reads **"agent init failed: No inference provider
@@ -186,14 +187,14 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
    - **`deepseek/deepseek-v4-flash`** — cheaper/faster; a good cost default given the
      spending-cap warning.
    - Prefer **Claude, Gemini, GPT, Kimi**, etc.? Pick that instead — the kit hardcodes no model.
-   _screenshot: `docs/setup/images/p3-05-set-main-model.png`_
+   ![SET MAIN MODEL picker — OpenRouter models, deepseek/deepseek-v4-pro selected](docs/setup/images/p3-05-set-main-model.png)
    After **Switch**, the MODELS page shows e.g. `MAIN MODEL: openrouter ·
    deepseek/deepseek-v4-pro`.
 3. **Restart Gateway + smoke-test the brain.** Hit **Restart Gateway** (bottom-left;
    gateway starts **Off**) — the "agent init failed / Setup Required" clears and
    **Gateway Status → On**. Then in **CHAT**, send a quick "hi" and confirm the model
    replies. That verifies the brain is wired end-to-end before configuring trading.
-   _screenshot: `docs/setup/images/p3-06-gateway-on-chat.png`_
+   ![Gateway running — live trade/status cards delivered to Telegram](docs/setup/images/telegram-trade-cards.png)
 
 **End of Phase 3** — Hermes has a working brain (whichever model you picked).
 
@@ -254,6 +255,8 @@ skills, cron job, and config as one installable agent. Installing it is a single
    This pulls the `shark` skill (all trading scripts), `SOUL.md` (persona), `AGENTS.md`
    (rules), and the disabled `weekday-trading` cron job onto the box, and makes it the
    active profile (dashboard → **PROFILES** shows `shark-trading-agent [active]`).
+   ![Installing in the App terminal — profile installed + activated, gateway run, cron registered (keys masked)](docs/setup/images/install-terminal.png)
+   ![PROFILES page — shark-trading-agent is the active profile, gateway running](docs/setup/images/profiles-active.png)
 2. **Set your Alpaca paper keys — in the App terminal.** The install generates a profile
    `.env` from the manifest's `env_requires`. The **FILES** page is **download-only**, so
    append the keys from the App terminal (paper keys from app.alpaca.markets -> the
