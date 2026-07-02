@@ -5,6 +5,12 @@ nothing of ours touching your box. When it's done it watches the market a few ti
 debates each idea bull-vs-bear, and places disciplined paper trades — and you can DM it a
 ticker to get its read.
 
+> **Just want the fastest path?** Follow **[docs/SETUP-runbook.md](docs/SETUP-runbook.md)** —
+> the linear, validated happy-path (install profile → keys → model → gateway → cron). Use
+> *this* guide for screenshots, per-provider detail, and troubleshooting. **Do them in the
+> order the runbook gives, not by this file's phase numbers** — the profile must be installed
+> and active before you set keys, model, or Telegram (the #1 setup mistake).
+
 ## What you need before you start
 - A small Linux VPS (see Phase 1 for size) — ~$5–10/mo.
 - An **Alpaca paper** account → API key + secret. (app.alpaca.markets → Paper account.)
@@ -316,10 +322,12 @@ That's the whole install — Phase 6 drives the first run and turns on the sched
    button only runs the gateway in the *foreground* (hangs at "Hermes Gateway Starting…";
    status then falsely reads Stopped). `nohup … &` persists past closing the terminal, but
    **re-run it after any container restart**.
-2. **Register the job (CLI).** The shipped `cron/weekday-trading.json` is a **template — not
-   auto-registered** (the CRON page starts empty; this build has no `--file`/import).
-   Register it with the real prompt and a UTC schedule — `hermes cron create` has **no
-   `--timezone` flag**, so the schedule runs on the container clock (UTC): `0 14,17,19` =
+2. **Register the job (CLI).** The shipped `cron/weekday-trading.template.json` is a
+   **template — not auto-registered** (the CRON page starts empty; this build has no
+   `--file`/import). Its `0 10,13,15` / `America/New_York` fields document the *intended*
+   schedule for readability only; this build has **no per-job timezone flag**, so you register
+   with the **UTC equivalent** below. Register it with the real prompt and a UTC schedule —
+   `hermes cron create` runs on the container clock (UTC): `0 14,17,19` =
    10 AM / 1 PM / 3 PM ET during **EDT** (`0 15,18,20` in EST):
    ```
    hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local

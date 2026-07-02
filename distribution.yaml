@@ -7,7 +7,11 @@
 #   printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://paper-api.alpaca.markets\n' >> /opt/data/profiles/shark-trading-agent/.env
 # Set ALPACA_BASE_URL explicitly (the paper endpoint) — the manifest default below is
 # not auto-injected into a hand-written profile .env, and the agent won't trade without it.
-# Your LLM key is set once in the dashboard KEYS page, not here.
+# Add your LLM key to the SAME profile .env (App terminal), e.g.:
+#   printf 'OPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+# then pick the model on the dashboard MODELS page. Do NOT rely on the KEYS page for the
+# LLM key: on this v0.17.0 build KEYS writes to the GLOBAL /opt/data/.env, which the profile
+# does not read — the bot then reports "No LLM provider configured" even with a model picked.
 name: shark-trading-agent
 version: 1.0.0
 description: "Whole-share swing paper-trading agent — discover, bull/bear debate, conviction gate, risk-sized bracketed entry, managed exits, self-grading journal, persistent thesis. Two keys: Alpaca paper + an LLM."
@@ -15,9 +19,11 @@ hermes_requires: ">=0.17.0"
 author: "LogiqFish"
 license: "MIT"
 
-# The two keys the friend provides. The LLM brain is configured separately in the
-# dashboard (KEYS + MODELS), so it is intentionally NOT listed here — that keeps the
-# promise literally "two keys and nothing else" for the trading scripts.
+# The two Alpaca values the installer writes into the generated profile .env template.
+# The LLM key goes in that same profile .env too (added by hand in the App terminal), but
+# is intentionally NOT listed here because its variable name depends on which provider you
+# pick on the MODELS page (OPENROUTER_API_KEY, ANTHROPIC_API_KEY, DEEPSEEK_API_KEY, …).
+# MODELS selects the model; the key lives in the profile .env next to the Alpaca keys.
 env_requires:
   - name: ALPACA_API_KEY
     description: "Alpaca PAPER API key — app.alpaca.markets → switch to the Paper account → generate keys. Paper only."
@@ -37,4 +43,4 @@ distribution_owned:
   - SOUL.md
   - AGENTS.md
   - skills/shark/
-  - cron/weekday-trading.json
+  - cron/weekday-trading.template.json

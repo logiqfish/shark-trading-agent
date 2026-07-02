@@ -68,9 +68,10 @@ account, and the `weekday-trading` cron fires the shark routine on schedule.
    - Confirm **Gateway Status: Running** in the dashboard (and `hermes cron list` no longer
      warns *"Gateway is not running"*).
 
-6. **Register the cron (CLI).** The shipped `cron/weekday-trading.json` is a **template — NOT
-   auto-registered** (the CRON page starts empty; this build has no `--file`/import). Register
-   it with the real prompt and a **UTC** schedule:
+6. **Register the cron (CLI).** The shipped `cron/weekday-trading.template.json` is a
+   **template — NOT auto-registered** (the CRON page starts empty; this build has no
+   `--file`/import). Its `America/New_York` fields document the intended schedule only; this
+   build has no per-job timezone flag, so register with the **UTC** equivalent below:
    ```
    hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
    ```
