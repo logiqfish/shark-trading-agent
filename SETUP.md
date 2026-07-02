@@ -162,24 +162,21 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
 (MODELS).
 
 **Steps:**
-1. **KEYS → set the provider key for whichever LLM you chose.** The KEYS page lists ~28
-   providers (Anthropic, DeepSeek, Gemini, Kimi/Moonshot, OpenAI, OpenRouter, …) with an
-   "X of 28 configured" counter. Expand **your** provider and click **Set**. Common picks:
-   - **DeepSeek** (platform.deepseek.com key) → the "Alpaca + an LLM = two keys" default;
-     strong reasoning, low cost. _Recommended if you have no preference._
-   - **Anthropic / OpenAI / Gemini** — any works; set your own provider key here, then pick
-     the model in MODELS (step 2).
-   - **OpenRouter** (your own OpenRouter key) → one key, hundreds of models. Note its field
-     is labeled "for vision, web scraping helpers, and MoA," so after setting it, confirm in
-     MODELS that an OpenRouter-routed model is actually selectable as the **main** brain.
-   _screenshot: `docs/setup/images/p3-03-keys.png` (redacted — keys are masked as
-   `sk-…last4`, but crop anyway)_
+1. **Set the LLM key in the profile `.env`** (App terminal) — **not** the KEYS page. As the
+   ⚠️ callout above explains, the dashboard KEYS/MODELS GUI can write the key to the *global*
+   env the profile doesn't read → *"No LLM provider configured."* Put it where the active
+   profile reads it (needs the profile installed + active — see Phase 5):
+   ```
+   printf 'OPENROUTER_API_KEY=sk-or-xxxx\n' >> /opt/data/profiles/shark-trading-agent/.env
+   ```
+   **OpenRouter** (`sk-or-…`) is the default — one key, hundreds of models. Any provider
+   works; use its own key var (`ANTHROPIC_API_KEY`, `DEEPSEEK_API_KEY`, `GEMINI_API_KEY`, …).
 2. **MODELS → set the MAIN MODEL.** The MODELS page has **MODEL SETTINGS** with a
    **MAIN MODEL** (starts `(unset)`) and **AUXILIARY TASKS** (11 helper tasks). Click
-   **CHANGE** on MAIN MODEL and pick **your** model — that's the agent's brain.
-   **Leave AUXILIARY TASKS on "all auto"** (they're vision/compression/web-extract
-   helpers; the kit's data-fence means it never uses them). If the picker shows no
-   working model, make sure that provider's key is set in KEYS and retry.
+   **CHANGE** on MAIN MODEL and pick **your** model (e.g. `deepseek/deepseek-v4-pro`) — that's
+   the agent's brain. **Leave AUXILIARY TASKS on "all auto"** (vision/compression/web-extract
+   helpers; the data-fence means the kit never uses them). Model selection *is* per-profile,
+   so the GUI is correct here — it's only the *key* that must live in the `.env` (step 1).
    _screenshot: `docs/setup/images/p3-04-models.png`_
 
    In the **SET MAIN MODEL** picker, the provider with your key lists its models. Pick the
@@ -264,7 +261,8 @@ skills, cron job, and config as one installable agent. Installing it is a single
    ```
    printf 'ALPACA_API_KEY=PKxxxx\nALPACA_SECRET_KEY=xxxx\nALPACA_BASE_URL=https://paper-api.alpaca.markets\n' >> /opt/data/profiles/shark-trading-agent/.env
    ```
-   Your LLM key is already set from Phase 3.
+   Your `OPENROUTER_API_KEY` went in this same profile `.env` in Phase 3 — all keys live
+   here, none on the KEYS page.
 3. **Restart** so the new profile + env load (`.env` is not hot-reloaded). If the
    dashboard's **Restart Gateway** button hangs, restart from the **Hostinger panel ->
    Docker Manager** (restart the Hermes app, or Reboot VPS) instead.

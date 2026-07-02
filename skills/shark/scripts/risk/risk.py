@@ -265,7 +265,7 @@ def gate(account, candidate, positions, catalyst=None, now=None,
     size(); a standalone caller must supply it.
 
     whole_swing=True (SHARK_WHOLE_SWING_V2): R/R uses the agent's input
-    `stop_price` (not a derived 5% stop), the open-position cap is 5, the
+    `stop_price` (not a derived 5% stop), the open-position cap is 8, the
     daily-loss halt is -3% of day-start equity, and no-averaging-down applies.
 
     Returns {pass, gates_failed, dire_triggers, earnings_check, notes}.
@@ -316,7 +316,7 @@ def gate(account, candidate, positions, catalyst=None, now=None,
 
     ticker = (candidate.get("ticker") or "").upper()
 
-    # Cap the number of concurrent open positions (3 in v1, 5 in v2).
+    # Cap the number of concurrent open positions (3 in v1, 8 in v2).
     if small_account or whole_swing:
         open_cap = MAX_OPEN_POSITIONS_V2 if whole_swing else MAX_OPEN_POSITIONS
         held_tickers = {
