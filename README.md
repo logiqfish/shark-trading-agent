@@ -15,8 +15,15 @@ actually trades** — with discipline:
 > self-grading journal → persistent thesis.
 
 <p align="center">
-  <img src="docs/setup/images/p3-04-models.png" width="820"
-       alt="The Shark agent on its self-hosted Hermes dashboard — trading brain set to deepseek-v4-pro via OpenRouter">
+  <img src="docs/setup/images/telegram-trade-cards.png" width="640"
+       alt="Live paper-trading cards in Telegram: conviction-gated entries, scaled exits to breakeven, +2R runners, broker brackets, and live P&L">
+</p>
+
+<p align="center"><em>What it looks like running — conviction-gated entries, scaled exits, broker brackets, and live P&amp;L, pushed to your phone.</em></p>
+
+<p align="center">
+  <img src="docs/setup/images/p3-04-models.png" width="760"
+       alt="The self-hosted Hermes dashboard — trading brain set to deepseek-v4-pro via OpenRouter">
 </p>
 
 > [!TIP]
