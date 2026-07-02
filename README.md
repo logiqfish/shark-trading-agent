@@ -172,5 +172,20 @@ ready-made prediction-market mode.
 
 ---
 
+## Running the tests
+
+The risk kernel and every skill ship **stdlib-only** tests (no extra deps). Run them **per
+skill directory** — a repo-root `pytest` fails to collect because each skill has its own
+`tests/` package (duplicate module names), so point pytest at one at a time:
+
+```
+cd skills/shark/scripts/risk && python3 -m pytest tests/ -q      # the risk kernel — 127 tests
+```
+
+Repeat for any skill under `skills/shark/scripts/*` (`risk`, `trade-manager`, `debate`,
+`discretionary`, `reflection`, `thesis`, `local-markov`, `discovery-local`, `alpaca`).
+
+---
+
 See also: [SETUP.md](SETUP.md) (full provisioning) · [FRIEND-SETUP.md](docs/FRIEND-SETUP.md)
 (non-technical path) · [DISCLAIMER.md](DISCLAIMER.md) · [LICENSE](LICENSE).
