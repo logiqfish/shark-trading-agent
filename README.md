@@ -143,5 +143,22 @@ not part of this kit. Want it? **[logiqfish.com](https://logiqfish.com)** or DM
 
 ---
 
+## Beyond stocks? (extending it)
+
+The interesting part here isn't "AI picks stocks" — it's the **containment pattern**: LLM
+reasoning boxed by a **deterministic risk kernel**, behind a **pluggable execution adapter**
+(`skills/shark/scripts/trade-manager/execution_adapter.py`). That pattern isn't specific to
+equities.
+
+Porting it to another venue — a different broker, crypto, or **prediction markets like
+[Kalshi](https://kalshi.com/) / [Polymarket](https://polymarket.com/)** — means writing a
+new execution adapter **and** a risk model that fits that instrument's payoff. It's a real
+extension, not a config flag: a binary event contract has a bounded, resolution-based payoff
+— there's no `−1R` stop or `+2R` bracket, so the kernel would be *rethought*, not reused.
+**This kit ships equities-on-Alpaca only** — the transferable part is the design, not a
+ready-made prediction-market mode.
+
+---
+
 See also: [SETUP.md](SETUP.md) (full provisioning) · [FRIEND-SETUP.md](docs/FRIEND-SETUP.md)
 (non-technical path) · [DISCLAIMER.md](DISCLAIMER.md) · [LICENSE](LICENSE).
