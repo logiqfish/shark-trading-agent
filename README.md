@@ -39,7 +39,10 @@ actually trades** — with discipline:
 **Two keys, nothing else:**
 
 1. **Alpaca (paper)** — market data *and* execution. Free at
-   **[alpaca.markets](https://alpaca.markets/)** (use a **paper** account).
+   **[alpaca.markets](https://alpaca.markets/)** (use a **paper** account). We pick Alpaca
+   because it's the only major broker with *free paper trading*; the same code retrofits to
+   **[Robinhood](https://robinhood.com/us/en/agentic-trading)** (real money, via its Agentic
+   Trading MCP) — see [Beyond stocks](#beyond-stocks-extending-it).
 2. **An LLM** — the single trading brain. Via **[OpenRouter](https://openrouter.ai/)** you
    can swap brains (DeepSeek, Claude, GPT…) from one key; DeepSeek is a good, cheap default.
 
@@ -75,7 +78,10 @@ SEC / 8-K monitoring, and a multi-pool **discovery engine** — as a separate ho
 not part of this kit. Want it? **[logiqfish.com](https://logiqfish.com)** or DM
 **[@logiqfish](https://instagram.com/logiqfish)** on Instagram.
 
-**Paper trading only. There is no live-trading path in this kit, by design.**
+**Paper trading only. There is no live-trading path in this kit, by design.** *(You can
+retrofit a live broker — e.g. **[Robinhood](https://robinhood.com/us/en/agentic-trading)** via
+its Agentic Trading MCP — but that's a deliberate real-money extension, covered in
+[Beyond stocks](#beyond-stocks-extending-it).)*
 
 ---
 
@@ -178,6 +184,31 @@ extension, not a config flag: a binary event contract has a bounded, resolution-
 — there's no `−1R` stop or `+2R` bracket, so the kernel would be *rethought*, not reused.
 **This kit ships equities-on-Alpaca only** — the transferable part is the design, not a
 ready-made prediction-market mode.
+
+### Retrofitting to a live broker (Robinhood)
+
+Staying in equities but swapping the venue is the *easy* kind of port — same risk kernel, same
+bracket/exit model, just a new adapter behind the same seam. Robinhood now exposes an
+**[Agentic Trading MCP](https://robinhood.com/us/en/agentic-trading)** (agents connect to its
+Model Context Protocol server against a dedicated *agentic account*). To target it you'd write a
+`RobinhoodMcpAdapter` implementing the same `ExecutionAdapter` interface as
+`LegacyAlpacaRestAdapter`, mapping the kit's place-order / list-positions / cancel / reconcile
+calls onto Robinhood's MCP tools (`place_equity_order`, `get_equity_positions`,
+`cancel_equity_order`, …) and translating the bracket/OCO exit model onto whatever that account
+supports. The deterministic risk kernel stays fail-closed **above** the adapter exactly as it
+does today — the LLM never holds broker write tools directly.
+
+**Why the kit ships Alpaca and not Robinhood:** Alpaca is the only major broker with a **free
+paper account** (real quotes, simulated fills, *zero dollars at risk*), and this kit is
+**paper-only by design** — a bug is a pretend mistake, safe to hand to a stranger. Robinhood's
+agentic account is a **real brokerage account with real money and no paper/sandbox mode**, so a
+Robinhood retrofit is a deliberate step into live trading, not a swapped config value. The kit
+even refuses to go live *by construction*: `broker.py` rejects any non-paper base at every order
+site (`"paper" not in adapter.base` → fail-closed), so a live retrofit means consciously lifting
+that guard. If you do: validate the adapter against Alpaca paper first, keep the risk kernel
+above the rail, respect Robinhood's own per-trade approval controls, and do your own guardrail +
+regulatory homework before a single real order. That's the whole reason it's an opt-in
+extension — **this kit stays paper-only.**
 
 ---
 
