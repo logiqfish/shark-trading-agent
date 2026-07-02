@@ -22,6 +22,13 @@ actually trades** — with discipline:
 <p align="center"><em>What it looks like running — conviction-gated entries, scaled exits, broker brackets, and live P&amp;L, pushed to your phone.</em></p>
 
 <p align="center">
+  <img src="docs/setup/images/alpaca-paper-positions.png" width="760"
+       alt="The bot's Alpaca paper account: four live long positions (DKNG, GOOGL, HOOD, UBER) with market value, average entry, and live P&L — banner reads 'You are on Paper Trading, no real money is being used'">
+</p>
+
+<p align="center"><em>…and the very same trades in your own Alpaca account — real positions, real live P&amp;L, <strong>paper money only</strong>. Not a backtest, not a rating: it places actual bracketed orders.</em></p>
+
+<p align="center">
   <img src="docs/setup/images/p3-04-models.png" width="760"
        alt="The self-hosted Hermes dashboard — trading brain set to deepseek-v4-pro via OpenRouter">
 </p>
@@ -135,8 +142,10 @@ not part of this kit. Want it? **[logiqfish.com](https://logiqfish.com)** or DM
    hermes cron create '0 14,17,19 * * 1-5' 'Run the Shark trading routine for this fire. Follow the `shark` skill procedure exactly, in order. Emit only the final one-line status card summarizing the fire (trade or no-trade). Always emit the card and never respond with [SILENT], so every fire posts a status card.' --name weekday-trading --skill shark --deliver local
    ```
    No `--timezone` flag → runs in **UTC**: `14,17,19` = **10 AM / 1 PM / 3 PM ET (EDT)**; use
-   `15,18,20` in winter (EST). Verify: `hermes cron list`. For Telegram cards: `/sethome` +
-   `--deliver telegram`. *(Details in [SETUP.md](SETUP.md).)*
+   `15,18,20` in winter (EST). Verify: `hermes cron list`. For Telegram cards: **send
+   `/sethome` in the target chat** (else the bot chats fine but scheduled fires deliver
+   nowhere — the #1 "looks dead" gotcha) + `--deliver telegram`. *(Details in
+   [SETUP.md](SETUP.md).)*
 
 8. **(Optional) Gut trades — the bot as your "second brain."** DM a real ticker and it
    pressure-tests your pick before any money moves:

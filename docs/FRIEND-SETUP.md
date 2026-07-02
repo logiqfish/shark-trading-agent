@@ -62,8 +62,11 @@ nohup hermes gateway run > /opt/data/gateway.log 2>&1 &
 ⚠️ Don't use the dashboard's "Restart Gateway" button (Trap #2). After this, the dashboard
 should read **Gateway Status: Running**.
 
-**7. Set the home channel** — in the **Telegram chat** with the bot, send **`/sethome`**.
-(The gateway must be up first — that's why this is after step 6.) Cron cards deliver here.
+**7. Set the home channel — `/sethome` (don't skip).** In the **Telegram chat** with the
+bot, send **`/sethome`**. (The gateway must be up first — that's why this is after step 6.)
+This is where cron cards deliver. **Without it the bot still chats but scheduled fires have
+nowhere to go, so no cards ever arrive on their own** — the #1 reason a working bot looks
+dead. Reinstalled or renamed the profile? Send `/sethome` again — it doesn't carry over.
 
 **8. Schedule the trading scan (App terminal).** The CRON page starts **empty** — the
 shipped job isn't auto-registered. Register it with the right hours (UTC — there's no

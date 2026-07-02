@@ -77,8 +77,11 @@ account, and the `weekday-trading` cron fires the shark routine on schedule.
    - **No `--timezone` flag** — the schedule runs on the container clock (**UTC**).
      `0 14,17,19` = 10 AM / 1 PM / 3 PM ET during **EDT**; in **EST** use `0 15,18,20`.
      Verify: `hermes cron list` → `Next run …T14:00:00+00:00` (= 10 AM ET).
-   - `--deliver local` writes cards to LOGS/SESSIONS (headless). For Telegram cards: send
-     `/sethome` in the target chat, then recreate the job with `--deliver telegram`.
+   - `--deliver local` writes cards to LOGS/SESSIONS (headless). For Telegram cards: **send
+     `/sethome` in the target chat** (sets the home channel Hermes delivers cron results to),
+     then recreate the job with `--deliver telegram`. **`/sethome` is the step people miss:**
+     the bot still chats without it, but scheduled fires have nowhere to deliver, so no cards
+     arrive on their own. The home channel is **per profile** — reinstall/rename → resend it.
 
 7. **Verify.**
    - Dashboard **CHAT** (or Telegram, if wired): *"what's my portfolio status"* → a live

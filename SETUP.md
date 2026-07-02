@@ -227,13 +227,24 @@ configured."** Two things fix it: a **provider key** (KEYS) **and** a **selected
    (bottom-left) — it connects each enabled channel on restart — then **Test**. _(If the
    dashboard button hangs, restart the container from the Hostinger panel → Docker Manager
    instead — see Phase 5.)_
-4. **Set the home channel: `/sethome`.** The gateway must be up first — that's why this is
-   after the restart. In the bot chat, the agent notes *"No home channel is set — a home
-   channel is where Hermes delivers cron job results and cross-platform messages."* Send
-   **`/sethome`** in the chat where you want the bot to post — **this is where the
-   scheduled heartbeat's trade cards will land** (Phase 6). _Note: a fresh bot talks as the
-   **default Hermes persona** ("I can help with coding, research, file management…");
-   installing the kit (Phase 5) is what makes it the Shark trading bot._
+4. **Set the home channel: `/sethome` — do not skip this.** The gateway must be up first —
+   that's why this is after the restart. In the bot chat, the agent notes *"No home channel
+   is set — a home channel is where Hermes delivers cron job results and cross-platform
+   messages."* Send **`/sethome`** in the chat where you want the bot to post — **this is
+   where the scheduled heartbeat's trade cards will land** (Phase 6). The bot confirms with
+   *"Home channel set to … Cron jobs and cross-platform messages will be delivered here."*
+
+   > **⚠️ This is the #1 reason a healthy bot looks dead.** Without a home channel, the bot
+   > still **chats** normally (it replies to anything you DM it) but every **scheduled cron
+   > fire has nowhere to deliver**, so no trade cards ever arrive on their own. If you can
+   > talk to your bot but never see a card show up at 10 AM / 1 PM / 3 PM without asking,
+   > **you missed `/sethome`.** The home channel is stored **per profile** — if you
+   > reinstall or rename the profile, **send `/sethome` again** (the old profile's home
+   > channel does not carry over).
+
+   _Note: a fresh bot talks as the **default Hermes persona** ("I can help with coding,
+   research, file management…"); installing the kit (Phase 5) is what makes it the Shark
+   trading bot._
 
 **End of Phase 4** — Telegram is live; you can DM the agent.
 
