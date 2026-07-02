@@ -7,6 +7,8 @@
 ![License MIT](https://img.shields.io/badge/license-MIT-blue)
 ![Educational](https://img.shields.io/badge/educational-not%20financial%20advice-critical)
 
+> **Stable presentation release: [v1.0.3](https://github.com/logiqfish/shark-trading-agent/releases/latest).** `main` is the live version you install; see **[Releases](https://github.com/logiqfish/shark-trading-agent/releases/latest)** for the frozen tagged package.
+
 A skinny, **paper-only** trading bot you run on your own VPS as a **Hermes Agent profile
 distribution**, with **two keys**. Unlike research/rating-only agent demos, **this one
 actually trades** — with discipline:
