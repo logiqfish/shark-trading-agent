@@ -13,7 +13,7 @@
 # LLM key: on this v0.17.0 build KEYS writes to the GLOBAL /opt/data/.env, which the profile
 # does not read — the bot then reports "No LLM provider configured" even with a model picked.
 name: shark-trading-agent
-version: 1.0.2
+version: 1.0.3
 description: "Whole-share swing paper-trading agent — discover, bull/bear debate, conviction gate, risk-sized bracketed entry, managed exits, self-grading journal, persistent thesis. Two keys: Alpaca paper + an LLM."
 hermes_requires: ">=0.17.0"
 author: "LogiqFish"

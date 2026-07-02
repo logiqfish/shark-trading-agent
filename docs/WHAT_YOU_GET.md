@@ -58,11 +58,19 @@ Any gate fails → `NO TRADE — risk gate failed.` The model never gets a veto 
 
 ## Run a paper-only dry demo
 
-1. Provision a Hermes box and set an LLM key ([SETUP.md](../SETUP.md) Phases 1–3).
-2. `hermes profile install -y github.com/logiqfish/shark-trading-agent`
-3. Set Alpaca **paper** keys in the profile `.env`; restart the gateway.
-4. Run the `weekday-trading` cron once by hand (⚡ or `hermes cron run <id>`) and watch it:
-   market gate → (maybe) bull/bear debate → risk gate → a paper order **or** a `NO TRADE` card.
+1. Provision a Hermes box.
+2. **Install *and activate* the Shark profile first** —
+   `hermes profile install -y github.com/logiqfish/shark-trading-agent` then
+   `hermes profile use shark-trading-agent`. Do this **before** any keys, or your config
+   binds to Hermes' *default* profile (the #1 setup mistake).
+3. Add your **LLM key and Alpaca paper keys** to the profile `.env` (App terminal), and pick
+   the model on the **MODELS** page.
+4. **Start the gateway**, then run the `weekday-trading` cron once by hand
+   (`hermes cron run <id>`) and watch it: market gate → (maybe) bull/bear debate → risk gate
+   → a paper order **or** a `NO TRADE` card.
+
+*(Full no-SSH walkthrough: [docs/FRIEND-SETUP.md](FRIEND-SETUP.md); screenshots + per-provider
+detail: [SETUP.md](../SETUP.md).)*
 
 Everything is observable in the dashboard **LOGS** / **SESSIONS** and (if you wire Telegram)
 a one-line status card per fire.
