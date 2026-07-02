@@ -5,11 +5,12 @@ nothing of ours touching your box. When it's done it watches the market a few ti
 debates each idea bull-vs-bear, and places disciplined paper trades — and you can DM it a
 ticker to get its read.
 
-> **Just want the fastest path?** Follow **[docs/SETUP-runbook.md](docs/SETUP-runbook.md)** —
-> the linear, validated happy-path (install profile → keys → model → gateway → cron). Use
-> *this* guide for screenshots, per-provider detail, and troubleshooting. **Do them in the
-> order the runbook gives, not by this file's phase numbers** — the profile must be installed
-> and active before you set keys, model, or Telegram (the #1 setup mistake).
+> **Just want the fastest path?** Start with **[docs/FRIEND-SETUP.md](docs/FRIEND-SETUP.md)** —
+> the validated, no-SSH happy path (install profile → keys → model → Telegram → gateway →
+> cron). Use *this* guide for screenshots, per-provider detail, and troubleshooting.
+> **Follow that doc's order, not this file's phase numbers** — the profile must be installed
+> and active *before* you set keys, model, or Telegram (the #1 setup mistake). New to the
+> project? Read **[docs/WHAT_YOU_GET.md](docs/WHAT_YOU_GET.md)** first for the 2-minute picture.
 
 ## What you need before you start
 - A small Linux VPS (see Phase 1 for size) — ~$5–10/mo.

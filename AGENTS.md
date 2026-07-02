@@ -15,8 +15,11 @@ The two Alpaca paper keys (`ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, and `ALPACA_BA
 which stays on the paper endpoint) are declared in the `shark` skill's
 `required_environment_variables`. Hermes **passes them into the `terminal` sandbox
 automatically** when the skill loads — so the scripts read `$ALPACA_API_KEY` directly.
-**Do not source a `.env` and do not print keys.** The LLM key is configured separately in
-the dashboard (KEYS + MODELS), never in this repo. If `ALPACA_API_KEY` is unset or a
+**Do not source a `.env` and do not print keys.** The LLM key lives in the active profile's
+`.env` next to the Alpaca paper keys; the dashboard **MODELS** page selects the model. (On
+this Hermes v0.17.0 build the **KEYS** page may write to the global `/opt/data/.env`, which
+the active profile does not read — so the LLM key belongs in the profile `.env`, not KEYS.)
+The scripts never need the LLM key themselves. If `ALPACA_API_KEY` is unset or a
 broker call returns 401, say so plainly (`broker auth failed — cannot verify live state`)
 and STOP — never report cached numbers as if current.
 
