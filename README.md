@@ -14,6 +14,11 @@ actually trades** — with discipline:
 > discover → bull/bear debate → conviction gate → bracketed entry → managed exit →
 > self-grading journal → persistent thesis.
 
+<p align="center">
+  <img src="docs/setup/images/p3-04-models.png" width="820"
+       alt="The Shark agent on its self-hosted Hermes dashboard — trading brain set to deepseek-v4-pro via OpenRouter">
+</p>
+
 > [!TIP]
 > **New here?** Read the 2-minute orientation → [docs/WHAT_YOU_GET.md](docs/WHAT_YOU_GET.md).
 
