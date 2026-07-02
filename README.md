@@ -179,13 +179,12 @@ reasoning boxed by a **deterministic risk kernel**, behind a **pluggable executi
 (`skills/shark/scripts/trade-manager/execution_adapter.py`). That pattern isn't specific to
 equities.
 
-Porting it to another venue — a different broker, crypto, or **prediction markets like
-[Kalshi](https://kalshi.com/) / [Polymarket](https://polymarket.com/)** — means writing a
-new execution adapter **and** a risk model that fits that instrument's payoff. It's a real
-extension, not a config flag: a binary event contract has a bounded, resolution-based payoff
-— there's no `−1R` stop or `+2R` bracket, so the kernel would be *rethought*, not reused.
-**This kit ships equities-on-Alpaca only** — the transferable part is the design, not a
-ready-made prediction-market mode.
+Porting it to another venue — a different broker, crypto, or an instrument with a
+fundamentally different payoff (say a binary, resolution-based contract) — means writing a
+new execution adapter **and** a risk model that fits that payoff. It's a real extension, not
+a config flag: a resolution-based contract has no `−1R` stop or `+2R` bracket, so the kernel
+would be *rethought*, not reused. **This kit ships equities-on-Alpaca only** — the
+transferable part is the design, not a ready-made mode for any other instrument.
 
 ### Retrofitting to a live broker (Robinhood)
 
